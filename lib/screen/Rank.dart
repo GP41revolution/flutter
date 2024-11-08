@@ -28,40 +28,66 @@ class RankPageScreens extends StatelessWidget {
   Widget build(BuildContext context) {
     rankData.sort((a, b) => b['score'].compareTo(a['score']));
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Ranking'),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "ランキング",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Ranking'),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: 'イージー'),
+              Tab(text: 'ノーマル'),
+              Tab(text: 'ハード'),
+            ],
+          ),
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                "ランキング",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: rankData.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: index == 0
-                      ? Icon(Icons.emoji_events,
-                          color: const Color.fromARGB(255, 255, 191, 0))
-                      : Text("${index + 1}", style: TextStyle(fontSize: 20)),
-                  title: Text(rankData[index]["username"]),
-                  trailing: Text("${rankData[index]["score"]}%"),
-                );
-              },
+            Expanded(
+              child: TabBarView(
+                children: [
+                  RankList(rankData: rankData),
+                  RankList(rankData: rankData),
+                  RankList(rankData: rankData),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+        backgroundColor: const Color.fromARGB(255, 218, 219, 211),
       ),
-      backgroundColor: const Color.fromARGB(255, 218, 219, 211),
+    );
+  }
+}
+
+class RankList extends StatelessWidget {
+  final List<Map<String, dynamic>> rankData;
+
+  RankList({required this.rankData});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: rankData.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          leading: index == 0
+              ? Icon(Icons.star, color: Colors.amber)
+              : Text("${index + 1}", style: TextStyle(fontSize: 20)),
+          title: Text(rankData[index]["username"]),
+          trailing: Text("${rankData[index]["score"]}%"),
+        );
+      },
     );
   }
 }

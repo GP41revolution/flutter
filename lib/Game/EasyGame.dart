@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/Rank.dart';
 
-class TimeTrialScreen extends StatefulWidget {
+class EasyGame extends StatefulWidget {
   @override
-  _TimeTrialScreenState createState() => _TimeTrialScreenState();
+  _EasyGame createState() => _EasyGame();
 }
 
-class _TimeTrialScreenState extends State<TimeTrialScreen> {
+class _EasyGame extends State<EasyGame> {
   int countdown = 2;
   int gameTime = 30;
   double progress = 1.0;
@@ -214,7 +214,7 @@ class PollutionImage extends StatelessWidget {
         onTap: () {
           if (color ==
               context
-                  .findAncestorStateOfType<_TimeTrialScreenState>()
+                  .findAncestorStateOfType<_EasyGame>()
                   ?.getSelectedColor()) {
             onRemove();
           }
@@ -260,12 +260,12 @@ class ResultScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("結果")),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
-                style: TextStyle(fontSize: 30)),
-            TextButton(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
+              style: TextStyle(fontSize: 30)),
+          TextButton(
               style: TextButton.styleFrom(
                 fixedSize: const Size(180, 55),
                 foregroundColor: const Color.fromARGB(255, 0, 0, 0),
@@ -275,21 +275,9 @@ class ResultScreen extends StatelessWidget {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => RankPageScreens()));
               },
-              child: Text('ランキング'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.popUntil(
-                    context,
-                    (route) => route
-                        .isFirst); // This goes back to the first screen in the stack.
-              },
-              child: Text('マップに戻る'),
-            ),
-          ],
-        ),
-      ),
+              child: Text('ランキング'))
+        ],
+      )),
     );
   }
 }
