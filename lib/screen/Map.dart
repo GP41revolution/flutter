@@ -5,7 +5,6 @@ import 'package:flutter_application_1/Map/Shinjuku.dart';
 import 'package:flutter_application_1/Map/Takada.dart';
 import 'package:flutter_application_1/Map/Yotsuya.dart';
 import 'package:flutter_application_1/manual/manual.dart';
-import 'package:flutter_application_1/screen/TopPage.dart';
 
 void main() => runApp(MyApp());
 

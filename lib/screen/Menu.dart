@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screen/TopPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_application_1/manual/manual.dart';
 
@@ -29,6 +28,15 @@ class MenuPageScreens extends StatelessWidget {
     }
   }
 
+  void _launchWebPage() async {
+    const url = 'http://localhost/revo/';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,13 +54,6 @@ class MenuPageScreens extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: _launchGoogleForm,
-            child: ListTile(
-              title: Text('お問い合わせ (Google Form)'),
-              trailing: Icon(Icons.open_in_browser),
-            ),
-          ),
-          InkWell(
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => ManualPage()));
@@ -62,10 +63,24 @@ class MenuPageScreens extends StatelessWidget {
               trailing: Icon(Icons.arrow_forward_ios),
             ),
           ),
+          InkWell(
+            onTap: _launchWebPage,
+            child: ListTile(
+              title: Text('ブラウザ版ページ表示'),
+              trailing: Icon(Icons.open_in_browser),
+            ),
+          ),
+          InkWell(
+            onTap: _launchGoogleForm,
+            child: ListTile(
+              title: Text('お問い合わせ (Google Form)'),
+              trailing: Icon(Icons.open_in_browser),
+            ),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Text('AquaGuardian'),
-          )
+          ),
         ],
       ),
     );

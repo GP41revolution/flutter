@@ -82,7 +82,8 @@ class RankList extends StatelessWidget {
       itemBuilder: (context, index) {
         return ListTile(
           leading: index == 0
-              ? Icon(Icons.star, color: Colors.amber)
+              ? Icon(Icons.emoji_events,
+                  color: const Color.fromARGB(255, 243, 189, 27))
               : Text("${index + 1}", style: TextStyle(fontSize: 20)),
           title: Text(rankData[index]["username"]),
           trailing: Text("${rankData[index]["score"]}%"),
