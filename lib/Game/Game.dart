@@ -122,7 +122,7 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
-      appBar: AppBar(title: Text("map")),
+      appBar: AppBar(title: Text("")),
       body: Stack(
         children: [
           if (countdown > 0)

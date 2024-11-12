@@ -164,7 +164,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     // const TopPageScreens(),
     RankPageScreens(),
     const MapPageScreens(),
-
     const MenuPageScreens(),
   ];
 
