@@ -17,7 +17,7 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
   List<PollutionImage> pollutionImages = [];
   Random random = Random();
   int score = 0;
-  int maxPollutionImages = 10;
+  int maxPollutionImages = 1; //細菌が秒ごとに増える数の値(1個)
 
   Timer? countdownTimer;
   Timer? gameTimer;
@@ -51,6 +51,8 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
         setState(() {
           gameTime--;
           progress = gameTime / 30;
+          pollutionImages.addAll(
+              generatePollutionImages()); // Add new bacteria every second
         });
       }
 
@@ -105,7 +107,7 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
         context,
         MaterialPageRoute(
           builder: (context) =>
-              ResultScreen(scorePercentage: (score / maxPollutionImages) * 100),
+              ResultScreen(scorePercentage: (score / maxPollutionImages) * 2.5),
         ),
       );
     }
@@ -143,21 +145,21 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   LightIcon(
-                    imagePath: 'assets/light.png',
+                    imagePath: 'assets/red-right.png',
                     onTap: () => setState(() {
                       selectedLight = 'red';
                       backgroundColor = Colors.red.withOpacity(0.3);
                     }),
                   ),
                   LightIcon(
-                    imagePath: 'assets/light.png',
+                    imagePath: 'assets/blue-right.png',
                     onTap: () => setState(() {
                       selectedLight = 'blue';
                       backgroundColor = Colors.blue.withOpacity(0.3);
                     }),
                   ),
                   LightIcon(
-                    imagePath: 'assets/light.png',
+                    imagePath: 'assets/green-right.png',
                     onTap: () => setState(() {
                       selectedLight = 'green';
                       backgroundColor = Colors.green.withOpacity(0.3);
@@ -263,7 +265,7 @@ class ResultScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
+            Text("除去率: ${scorePercentage.toStringAsFixed(0)}%",
                 style: TextStyle(fontSize: 30)),
             TextButton(
               style: TextButton.styleFrom(

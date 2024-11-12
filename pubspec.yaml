@@ -42,10 +42,11 @@ flutter:
    - assets/Enemy1.png
    - assets/Enemy2.png
    - assets/Enemy3.png
-   - assets/light.png
    - assets/Camera_icon.png
    - assets/splash_image.jpg
-
+   - assets/blue-right.png
+   - assets/red-right.png
+   - assets/green-right.png
 
  #スプラッシュ画面の設定
 flutter_native_splash:
