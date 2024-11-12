@@ -171,7 +171,7 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
             Center(
               child: ElevatedButton(
                 onPressed: startGame,
-                child: Text("スタート"),
+                child: Text("スタート"), //これいらないかも。
               ),
             ),
         ],
