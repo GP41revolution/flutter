@@ -17,7 +17,7 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
   List<PollutionImage> pollutionImages = [];
   Random random = Random();
   int score = 0;
-  int maxPollutionImages = 1; //細菌が秒ごとに増える数の値(1個)
+  int maxPollutionImages = 4; //細菌が秒ごとに増える数の値(1個)
 
   Timer? countdownTimer;
   Timer? gameTimer;
@@ -46,17 +46,17 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
   }
 
   void startTimer() {
-    gameTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    gameTimer = Timer.periodic(Duration(seconds: 2), (timer) {
+      // インターバルを2秒に変更
       if (mounted) {
         setState(() {
           gameTime--;
           progress = gameTime / 30;
-          pollutionImages.addAll(
-              generatePollutionImages()); // Add new bacteria every second
+          pollutionImages.addAll(generatePollutionImages()); // 2秒ごとに新しい細菌を追加
         });
       }
 
-      if (gameTime == 0) {
+      if (gameTime <= 0) {
         timer.cancel();
         showResults();
       }
@@ -265,7 +265,7 @@ class ResultScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("除去率: ${scorePercentage.toStringAsFixed(0)}%",
+            Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
                 style: TextStyle(fontSize: 30)),
             TextButton(
               style: TextButton.styleFrom(

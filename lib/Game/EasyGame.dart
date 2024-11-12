@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/Rank.dart';
 
-class EasyGame extends StatefulWidget {
+class EasyGameScreen extends StatefulWidget {
   @override
-  _EasyGame createState() => _EasyGame();
+  _EasyGameScreen createState() => _EasyGameScreen();
 }
 
-class _EasyGame extends State<EasyGame> {
+class _EasyGameScreen extends State<EasyGameScreen> {
   int countdown = 2;
   int gameTime = 30;
   double progress = 1.0;
@@ -17,7 +17,7 @@ class _EasyGame extends State<EasyGame> {
   List<PollutionImage> pollutionImages = [];
   Random random = Random();
   int score = 0;
-  int maxPollutionImages = 10;
+  int maxPollutionImages = 1; //細菌が秒ごとに増える数の値(1個)
 
   Timer? countdownTimer;
   Timer? gameTimer;
@@ -51,6 +51,8 @@ class _EasyGame extends State<EasyGame> {
         setState(() {
           gameTime--;
           progress = gameTime / 30;
+          pollutionImages.addAll(
+              generatePollutionImages()); // Add new bacteria every second
         });
       }
 
@@ -105,7 +107,7 @@ class _EasyGame extends State<EasyGame> {
         context,
         MaterialPageRoute(
           builder: (context) =>
-              ResultScreen(scorePercentage: (score / maxPollutionImages) * 100),
+              ResultScreen(scorePercentage: (score / maxPollutionImages) * 2.5),
         ),
       );
     }
@@ -122,7 +124,7 @@ class _EasyGame extends State<EasyGame> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
-      appBar: AppBar(title: Text("map")),
+      appBar: AppBar(title: Text("")),
       body: Stack(
         children: [
           if (countdown > 0)
@@ -143,21 +145,21 @@ class _EasyGame extends State<EasyGame> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   LightIcon(
-                    imagePath: 'assets/light.png',
+                    imagePath: 'assets/red-right.png',
                     onTap: () => setState(() {
                       selectedLight = 'red';
                       backgroundColor = Colors.red.withOpacity(0.3);
                     }),
                   ),
                   LightIcon(
-                    imagePath: 'assets/light.png',
+                    imagePath: 'assets/blue-right.png',
                     onTap: () => setState(() {
                       selectedLight = 'blue';
                       backgroundColor = Colors.blue.withOpacity(0.3);
                     }),
                   ),
                   LightIcon(
-                    imagePath: 'assets/light.png',
+                    imagePath: 'assets/green-right.png',
                     onTap: () => setState(() {
                       selectedLight = 'green';
                       backgroundColor = Colors.green.withOpacity(0.3);
@@ -171,7 +173,7 @@ class _EasyGame extends State<EasyGame> {
             Center(
               child: ElevatedButton(
                 onPressed: startGame,
-                child: Text("スタート"),
+                child: Text("スタート"), //これいらないかもaaaaaas
               ),
             ),
         ],
@@ -214,7 +216,7 @@ class PollutionImage extends StatelessWidget {
         onTap: () {
           if (color ==
               context
-                  .findAncestorStateOfType<_EasyGame>()
+                  .findAncestorStateOfType<_EasyGameScreen>()
                   ?.getSelectedColor()) {
             onRemove();
           }
@@ -260,12 +262,12 @@ class ResultScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("結果")),
       body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
-              style: TextStyle(fontSize: 30)),
-          TextButton(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
+                style: TextStyle(fontSize: 30)),
+            TextButton(
               style: TextButton.styleFrom(
                 fixedSize: const Size(180, 55),
                 foregroundColor: const Color.fromARGB(255, 0, 0, 0),
@@ -275,9 +277,21 @@ class ResultScreen extends StatelessWidget {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => RankPageScreens()));
               },
-              child: Text('ランキング'))
-        ],
-      )),
+              child: Text('ランキング'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.popUntil(
+                    context,
+                    (route) => route
+                        .isFirst); // This goes back to the first screen in the stack.
+              },
+              child: Text('マップに戻る'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

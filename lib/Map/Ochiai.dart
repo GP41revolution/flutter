@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Game/EasyGame.dart';
 
 void main() => runApp(MyApp());
 
@@ -78,6 +79,8 @@ class _OchiaiPageState extends State<OchiaiPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => EasyGameScreen()));
                 print('$selectedDifficulty でゲーム開始');
               },
               child: Text('スタート'),

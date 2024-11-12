@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Game/NomarlGame.dart';
 
 void main() => runApp(MyApp());
 
@@ -79,6 +80,10 @@ class _YotsuyaPageState extends State<YotsuyaPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NormalGameScreen()));
                 print('$selectedDifficulty でゲーム開始');
               },
               child: Text('スタート'),
