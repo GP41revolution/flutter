@@ -1,7 +1,6 @@
 name: flutter_application_1
 description: "A new Flutter project."
-publish_to: 'none' 
-
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -12,16 +11,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   cupertino_icons: ^1.0.8
   webview_flutter: ^4.9.0
   package_info_plus: ^8.0.3
   url_launcher: ^6.3.1
   image_picker: ^1.1.2
   flutter_native_splash: ^2.4.2
-
-
-
 
 dev_dependencies:
   flutter_test:
@@ -30,24 +25,25 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
 flutter:
-
   uses-material-design: true
 
   assets:
-   - assets/Map(1).png
-   - assets/Map(2).png
-   - assets/Map(3).png
-   - assets/Map(4).png
-   - assets/Map(5).png
-   - assets/Enemy1.png
-   - assets/Enemy2.png
-   - assets/Enemy3.png
-   - assets/light.png
-   - assets/Camera_icon.png
-   - assets/splash_image.jpg
+    - assets/Map(1).png
+    - assets/Map(2).png
+    - assets/Map(3).png
+    - assets/Map(4).png
+    - assets/Map(5).png
+    - assets/Enemy1.png
+    - assets/Enemy2.png
+    - assets/Enemy3.png
+    - assets/light.png
+    - assets/Camera_icon.png
+    - assets/splash_image.jpg
+    - assets/red-light.png
+    - assets/blue-light.png
+    - assets/green-light.png
 
-
- #スプラッシュ画面の設定
+  #スプラッシュ画面の設定
 flutter_native_splash:
   color: "#42a5f5"
   image: assets/splash_image.jpg
