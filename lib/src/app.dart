@@ -191,7 +191,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'メニュー'),
         ],
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Color.fromARGB(255, 219, 227, 234),
+        backgroundColor: Color.fromARGB(255, 192, 208, 237),
       ),
     );
   }
