@@ -79,8 +79,12 @@ class _KagurazakaPageState extends State<KagurazakaPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EasyGameScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EasyGameScreen(
+                              startCountdown: true,
+                            )));
                 print('$selectedDifficulty でゲーム開始');
               },
               child: Text('スタート'),

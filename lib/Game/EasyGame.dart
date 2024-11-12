@@ -4,12 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/Rank.dart';
 
 class EasyGameScreen extends StatefulWidget {
+  final bool startCountdown;
+
+  EasyGameScreen({Key? key, required this.startCountdown}) : super(key: key);
+
   @override
-  _EasyGameScreen createState() => _EasyGameScreen();
+  _EasyGameScreenState createState() => _EasyGameScreenState();
 }
 
-class _EasyGameScreen extends State<EasyGameScreen> {
-  int countdown = 2;
+class _EasyGameScreenState extends State<EasyGameScreen> {
+  int countdown = 3;
   int gameTime = 30;
   double progress = 1.0;
   Color backgroundColor = Colors.white;
@@ -22,41 +26,51 @@ class _EasyGameScreen extends State<EasyGameScreen> {
   Timer? countdownTimer;
   Timer? gameTimer;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.startCountdown) {
+      startGameCountdown(); // スタート時にカウントダウン開始
+    }
+  }
+
+  void startGameCountdown() {
+    setState(() {
+      countdown = 3; //初期値
+    });
+
+    countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        countdown--;
+      });
+
+      if (countdown == 0) {
+        countdownTimer?.cancel();
+        startGame();
+      }
+    });
+  }
+
   void startGame() {
     setState(() {
-      countdown = 2;
+      gameTime = 20;
       progress = 1.0;
       score = 0;
       pollutionImages = generatePollutionImages();
       backgroundColor = Colors.white;
     });
 
-    countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (mounted) {
-        setState(() {
-          countdown--;
-        });
-      }
-
-      if (countdown == 0) {
-        countdownTimer?.cancel();
-        startTimer();
-      }
-    });
-  }
-
-  void startTimer() {
     gameTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      // インターバルを1秒に変更
       if (mounted) {
         setState(() {
           gameTime--;
           progress = gameTime / 30;
-          pollutionImages.addAll(
-              generatePollutionImages()); // Add new bacteria every second
+          pollutionImages.addAll(generatePollutionImages()); // 1秒ごとに新しい細菌を追加
         });
       }
 
-      if (gameTime == 0) {
+      if (gameTime <= 0) {
         timer.cancel();
         showResults();
       }
@@ -106,8 +120,9 @@ class _EasyGameScreen extends State<EasyGameScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              ResultScreen(scorePercentage: (score / maxPollutionImages) * 2.5),
+          builder: (context) => ResultScreen(
+              scorePercentage:
+                  (score / maxPollutionImages) * 3.5), //１個消すと入る得点の値
         ),
       );
     }
@@ -145,21 +160,21 @@ class _EasyGameScreen extends State<EasyGameScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   LightIcon(
-                    imagePath: 'assets/red-right.png',
+                    imagePath: 'assets/red-light.png',
                     onTap: () => setState(() {
                       selectedLight = 'red';
                       backgroundColor = Colors.red.withOpacity(0.3);
                     }),
                   ),
                   LightIcon(
-                    imagePath: 'assets/blue-right.png',
+                    imagePath: 'assets/blue-light.png',
                     onTap: () => setState(() {
                       selectedLight = 'blue';
                       backgroundColor = Colors.blue.withOpacity(0.3);
                     }),
                   ),
                   LightIcon(
-                    imagePath: 'assets/green-right.png',
+                    imagePath: 'assets/green-light.png',
                     onTap: () => setState(() {
                       selectedLight = 'green';
                       backgroundColor = Colors.green.withOpacity(0.3);
@@ -169,13 +184,13 @@ class _EasyGameScreen extends State<EasyGameScreen> {
               ),
             ),
           ],
-          if (countdown > 0)
-            Center(
-              child: ElevatedButton(
-                onPressed: startGame,
-                child: Text("スタート"), //これいらないかもaaaaaas
-              ),
-            ),
+          // if (countdown == 3)
+          //   Center(
+          //     child: ElevatedButton(
+          //       onPressed: startGameCountdown,
+          //       child: Text("スタート"),
+          //     ),
+          //   ),
         ],
       ),
     );
@@ -216,7 +231,7 @@ class PollutionImage extends StatelessWidget {
         onTap: () {
           if (color ==
               context
-                  .findAncestorStateOfType<_EasyGameScreen>()
+                  .findAncestorStateOfType<_EasyGameScreenState>()
                   ?.getSelectedColor()) {
             onRemove();
           }

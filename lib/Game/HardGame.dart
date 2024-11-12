@@ -143,21 +143,21 @@ class _HardGame extends State<HardGame> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   LightIcon(
-                    imagePath: 'assets/light.png',
+                    imagePath: 'assets/red-light.png',
                     onTap: () => setState(() {
                       selectedLight = 'red';
                       backgroundColor = Colors.red.withOpacity(0.3);
                     }),
                   ),
                   LightIcon(
-                    imagePath: 'assets/light.png',
+                    imagePath: 'assets/blue-light.png',
                     onTap: () => setState(() {
                       selectedLight = 'blue';
                       backgroundColor = Colors.blue.withOpacity(0.3);
                     }),
                   ),
                   LightIcon(
-                    imagePath: 'assets/light.png',
+                    imagePath: 'assets/green-light.png',
                     onTap: () => setState(() {
                       selectedLight = 'green';
                       backgroundColor = Colors.green.withOpacity(0.3);

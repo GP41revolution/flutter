@@ -83,7 +83,9 @@ class _YotsuyaPageState extends State<YotsuyaPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => NormalGameScreen()));
+                        builder: (context) => NormalGameScreen(
+                              startCountdown: true,
+                            )));
                 print('$selectedDifficulty でゲーム開始');
               },
               child: Text('スタート'),
