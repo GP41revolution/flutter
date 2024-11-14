@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_application_1/manual/manual.dart';
+import 'package:flutter_application_1/src/app.dart';
 
 void main() => runApp(MyApp());
 
@@ -76,6 +77,34 @@ class MenuPageScreens extends StatelessWidget {
             child: ListTile(
               title: Text('お問い合わせ (Google Form)'),
               trailing: Icon(Icons.open_in_browser),
+            ),
+          ),
+          // Logout button
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navigate back to the WelcomeScreen
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => const WelcomeScreen()),
+                    (Route<dynamic> route) => false,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: Text(
+                  'ログアウト',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ),
           Align(

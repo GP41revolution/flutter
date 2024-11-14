@@ -122,7 +122,7 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
         MaterialPageRoute(
           builder: (context) => ResultScreen(
               scorePercentage:
-                  (score / maxPollutionImages) * 2.5), //１個消すと入る得点の値
+                  (score / maxPollutionImages) * 3.5), //１個消すと入る得点の値
         ),
       );
     }

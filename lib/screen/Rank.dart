@@ -68,7 +68,7 @@ class _RankPageScreensState extends State<RankPageScreens>
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Ranking'),
+          title: Text('ランキング一覧 '),
           backgroundColor: const Color.fromARGB(255, 192, 208, 237),
           bottom: TabBar(
             controller: _tabController,
