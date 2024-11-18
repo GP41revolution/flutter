@@ -72,6 +72,7 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
 
       if (gameTime <= 0) {
         timer.cancel();
+        // addScoreData();
         showResults();
       }
     });
@@ -114,6 +115,15 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
         return Colors.white;
     }
   }
+
+
+  // static final FirebaseFirestore db = FirebaseFirestore.instance;
+  // static final CollectionReference User01 = db.collection('User01');
+
+  // void addScoreData() async {
+  //   await User01.add({'Easy': 'score'});
+  // }
+
 
   void showResults() {
     if (mounted) {

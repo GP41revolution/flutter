@@ -33,6 +33,9 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  String text = "";
+  String username_text = "";
+
   File? _image; // 選択した画像ファイルを格納
 
   // 画像を選択するメソッド
@@ -111,6 +114,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     labelText: 'Username',
                     border: UnderlineInputBorder(),
                   ),
+                  onChanged: (value) {
+                    text = value;
+                  },
                 ),
               ),
               SizedBox(height: 30),
@@ -122,6 +128,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       builder: (context) => const MyStatefulWidget(),
                     ),
                   );
+                  setState(() {
+                    username_text = text; //ボタン押下時にtextfieldの内容をセット
+                    // _RankPageScreensState(UserName_Text: username_text);
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
