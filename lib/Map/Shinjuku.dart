@@ -28,6 +28,7 @@ class _ShinjukuPageState extends State<ShinjukuPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('新宿エリア'),
+        backgroundColor: Color.fromARGB(255, 192, 208, 237),
       ),
       body: Center(
         child: Column(

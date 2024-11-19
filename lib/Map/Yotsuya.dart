@@ -28,6 +28,7 @@ class _YotsuyaPageState extends State<YotsuyaPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('四谷エリア'),
+        backgroundColor: Color.fromARGB(255, 192, 208, 237),
       ),
       body: Center(
         child: Column(

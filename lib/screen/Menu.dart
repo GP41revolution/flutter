@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_application_1/manual/manual.dart';
+import 'package:flutter_application_1/manual/Menu_manual.dart';
 import 'package:flutter_application_1/src/app.dart';
 
 void main() => runApp(MyApp());
@@ -58,7 +58,7 @@ class MenuPageScreens extends StatelessWidget {
           InkWell(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ManualPage()));
+                  MaterialPageRoute(builder: (context) => IntroPage()));
             },
             child: ListTile(
               title: Text('遊び方マニュアル'),

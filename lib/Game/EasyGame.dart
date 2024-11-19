@@ -122,7 +122,7 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
         MaterialPageRoute(
           builder: (context) => ResultScreen(
               scorePercentage:
-                  (score / maxPollutionImages) * 3.5), //１個消すと入る得点の値
+                  (score / maxPollutionImages) * 5.25), //１個消すと入る得点の値
         ),
       );
     }

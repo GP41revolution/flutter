@@ -4,7 +4,7 @@ import 'package:flutter_application_1/Map/Ochiai.dart';
 import 'package:flutter_application_1/Map/Shinjuku.dart';
 import 'package:flutter_application_1/Map/Takada.dart';
 import 'package:flutter_application_1/Map/Yotsuya.dart';
-import 'package:flutter_application_1/manual/manual.dart';
+import 'package:flutter_application_1/manual/Menu_manual.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,7 +25,7 @@ class MapPageScreens extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('マップ'),
+        title: Text('ゲーム'),
         backgroundColor: Color.fromARGB(255, 192, 208, 237),
       ),
       body: Stack(

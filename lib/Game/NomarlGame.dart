@@ -121,7 +121,7 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
         context,
         MaterialPageRoute(
           builder: (context) =>
-              ResultScreen(scorePercentage: (score / maxPollutionImages) * 2.5),
+              ResultScreen(scorePercentage: (score / maxPollutionImages) * 4.6),
         ),
       );
     }

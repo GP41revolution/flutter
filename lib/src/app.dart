@@ -186,7 +186,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           //  BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ホーム'),
           BottomNavigationBarItem(
               icon: Icon(Icons.emoji_events), label: 'ランキング'),
-          BottomNavigationBarItem(icon: Icon(Icons.map_sharp), label: 'マップ'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.sports_esports), label: 'ゲーム'),
 
           BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'メニュー'),
         ],
