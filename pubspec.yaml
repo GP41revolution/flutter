@@ -1,7 +1,6 @@
 name: flutter_application_1
 description: "A new Flutter project."
-publish_to: 'none' 
-
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -12,14 +11,15 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   cupertino_icons: ^1.0.8
   webview_flutter: ^4.9.0
   package_info_plus: ^8.0.3
   url_launcher: ^6.3.1
-
-
-
+  image_picker: ^1.1.2
+  flutter_native_splash: ^2.4.2
+  get: ^4.6.6
+  hive_flutter: ^1.1.0
+  introduction_screen: ^3.1.14
 
 dev_dependencies:
   flutter_test:
@@ -28,7 +28,6 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
 flutter:
-
   uses-material-design: true
 
   assets:
@@ -40,4 +39,21 @@ flutter:
    - assets/Enemy1.png
    - assets/Enemy2.png
    - assets/Enemy3.png
-   - assets/light.png
+   - assets/Camera_icon.png
+   - assets/splash_image.jpg
+   - assets/blue-light.png
+   - assets/red-light.png
+   - assets/green-light.png
+   - assets/CreateImage.jpg
+
+  #スプラッシュ画面の設定
+flutter_native_splash:
+  color: "#42a5f5"
+  image: assets/splash_image.jpg
+  android: true
+  ios: true
+  web: true
+  android_gravity: center
+  ios_content_mode: center
+  web_image_mode: center
+  fullscreen: true

@@ -28,6 +28,7 @@ class _ShinjukuPageState extends State<ShinjukuPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('新宿エリア'),
+        backgroundColor: Color.fromARGB(255, 192, 208, 237),
       ),
       body: Center(
         child: Column(
@@ -80,8 +81,13 @@ class _ShinjukuPageState extends State<ShinjukuPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => TimeTrialScreen()));
+                // スタートボタンが押されたときに、3秒カウントダウンを開始してゲーム画面に遷移
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TimeTrialScreen(startCountdown: true),
+                  ),
+                );
               },
               child: Text('スタート'),
             ),

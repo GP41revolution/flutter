@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screen/TopPage.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_application_1/detail/manual.dart';
+import 'package:flutter_application_1/manual/Menu_manual.dart';
+import 'package:flutter_application_1/src/app.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,11 +29,21 @@ class MenuPageScreens extends StatelessWidget {
     }
   }
 
+  void _launchWebPage() async {
+    const url = 'http://localhost/revo/';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Menu'),
+        backgroundColor: Color.fromARGB(255, 192, 208, 237),
       ),
       body: ListView(
         children: <Widget>[
@@ -46,26 +56,61 @@ class MenuPageScreens extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: _launchGoogleForm,
-            child: ListTile(
-              title: Text('お問い合わせ (Google Form)'),
-              trailing: Icon(Icons.open_in_browser),
-            ),
-          ),
-          InkWell(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ManualPage()));
+                  MaterialPageRoute(builder: (context) => IntroPage()));
             },
             child: ListTile(
               title: Text('遊び方マニュアル'),
               trailing: Icon(Icons.arrow_forward_ios),
             ),
           ),
+          InkWell(
+            onTap: _launchWebPage,
+            child: ListTile(
+              title: Text('ブラウザ版ページ表示'),
+              trailing: Icon(Icons.open_in_browser),
+            ),
+          ),
+          InkWell(
+            onTap: _launchGoogleForm,
+            child: ListTile(
+              title: Text('お問い合わせ (Google Form)'),
+              trailing: Icon(Icons.open_in_browser),
+            ),
+          ),
+          // Logout button
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navigate back to the WelcomeScreen
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => const WelcomeScreen()),
+                    (Route<dynamic> route) => false,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: Text(
+                  'ログアウト',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Text('AquaGuardian'),
-          )
+          ),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Game/EasyGame.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,6 +28,7 @@ class _OchiaiPageState extends State<OchiaiPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('落合エリア'),
+        backgroundColor: Color.fromARGB(255, 192, 208, 237),
       ),
       body: Center(
         child: Column(
@@ -78,6 +80,12 @@ class _OchiaiPageState extends State<OchiaiPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EasyGameScreen(
+                              startCountdown: true,
+                            )));
                 print('$selectedDifficulty でゲーム開始');
               },
               child: Text('スタート'),

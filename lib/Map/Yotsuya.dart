@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Game/NomarlGame.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,6 +28,7 @@ class _YotsuyaPageState extends State<YotsuyaPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('四谷エリア'),
+        backgroundColor: Color.fromARGB(255, 192, 208, 237),
       ),
       body: Center(
         child: Column(
@@ -79,6 +81,12 @@ class _YotsuyaPageState extends State<YotsuyaPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NormalGameScreen(
+                              startCountdown: true,
+                            )));
                 print('$selectedDifficulty でゲーム開始');
               },
               child: Text('スタート'),

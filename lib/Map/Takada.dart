@@ -27,6 +27,7 @@ class _TakadaPageState extends State<TakadaPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('高田馬場エリア'),
+        backgroundColor: Color.fromARGB(255, 192, 208, 237),
       ),
       body: Center(
         child: Column(

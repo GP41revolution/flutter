@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Game/EasyGame.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,6 +28,7 @@ class _KagurazakaPageState extends State<KagurazakaPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('神楽坂エリア'),
+        backgroundColor: Color.fromARGB(255, 192, 208, 237),
       ),
       body: Center(
         child: Column(
@@ -78,6 +80,12 @@ class _KagurazakaPageState extends State<KagurazakaPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EasyGameScreen(
+                              startCountdown: true,
+                            )));
                 print('$selectedDifficulty でゲーム開始');
               },
               child: Text('スタート'),

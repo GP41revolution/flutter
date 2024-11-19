@@ -3,16 +3,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/Rank.dart';
 
-class TimeTrialScreen extends StatefulWidget {
+class EasyGameScreen extends StatefulWidget {
   final bool startCountdown;
 
-  TimeTrialScreen({Key? key, required this.startCountdown}) : super(key: key);
+  EasyGameScreen({Key? key, required this.startCountdown}) : super(key: key);
 
   @override
-  _TimeTrialScreenState createState() => _TimeTrialScreenState();
+  _EasyGameScreenState createState() => _EasyGameScreenState();
 }
 
-class _TimeTrialScreenState extends State<TimeTrialScreen> {
+class _EasyGameScreenState extends State<EasyGameScreen> {
   int countdown = 3;
   int gameTime = 30;
   double progress = 1.0;
@@ -21,7 +21,11 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
   List<PollutionImage> pollutionImages = [];
   Random random = Random();
   int score = 0;
-  int maxPollutionImages = 4;
+  int maxPollutionImages = 1;
+  bool debugMode = true; // デバッグモードを有効にするフラグ
+  double debugAreaTopOffset = 100; // 生成エリアの上部オフセット
+  double debugAreaHeight = 300; // 生成エリアの高さ
+  double debugAreaWidth = 300; // 生成エリアの幅
   Timer? countdownTimer;
   Timer? gameTimer;
 
@@ -80,7 +84,7 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
       });
     });
 
-    Timer.periodic(Duration(seconds: 2), (timer) {
+    Timer.periodic(Duration(seconds: 1), (timer) {
       if (gameTime <= 0 || !mounted) {
         timer.cancel();
       } else {
@@ -135,7 +139,7 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
         context,
         MaterialPageRoute(
           builder: (context) =>
-              ResultScreen(scorePercentage: (score / maxPollutionImages) * 4.6),
+              ResultScreen(scorePercentage: (score / maxPollutionImages) * 4.9),
         ),
       );
     }
@@ -308,7 +312,16 @@ class ResultScreen extends StatelessWidget {
               },
               child: Text('ランキング'),
             ),
+            SizedBox(
+              height: 10, //ボタンとの間に空白
+            ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(180, 55), // サイズをランキングボタンと同じに
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
+                backgroundColor:
+                    const Color.fromARGB(255, 195, 213, 237), // 背景色
+              ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
               },
