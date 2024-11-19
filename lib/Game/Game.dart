@@ -21,8 +21,7 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
   List<PollutionImage> pollutionImages = [];
   Random random = Random();
   int score = 0;
-  int maxPollutionImages = 4; //細菌が秒ごとに増える数の値(1個)
-
+  int maxPollutionImages = 4;
   Timer? countdownTimer;
   Timer? gameTimer;
 
@@ -30,16 +29,17 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
   void initState() {
     super.initState();
     if (widget.startCountdown) {
-      startGameCountdown(); // スタート時にカウントダウン開始
+      startGameCountdown();
     }
   }
 
   void startGameCountdown() {
     setState(() {
-      countdown = 3; //初期値
+      countdown = 3; // 初期値
     });
 
     countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (!mounted) return; // mounted チェック
       setState(() {
         countdown--;
       });
@@ -53,26 +53,40 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
 
   void startGame() {
     setState(() {
-      gameTime = 20;
-      progress = 1.0;
-      score = 0;
+      gameTime = 30; // ゲーム時間をリセット
+      progress = 1.0; // 進捗バーをリセット
+      score = 0; // スコアリセット
       pollutionImages = generatePollutionImages();
       backgroundColor = Colors.white;
     });
 
-    gameTimer = Timer.periodic(Duration(seconds: 2), (timer) {
-      // インターバルを2秒に変更
-      if (mounted) {
-        setState(() {
-          gameTime--;
-          progress = gameTime / 30;
-          pollutionImages.addAll(generatePollutionImages()); // 2秒ごとに新しい細菌を追加
-        });
-      }
+    final startTime = DateTime.now();
 
-      if (gameTime <= 0) {
+    gameTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
+      if (!mounted) {
+        timer.cancel(); // ウィジェットが破棄されている場合はタイマーを停止
+        return;
+      }
+      setState(() {
+        final elapsed = DateTime.now().difference(startTime).inMilliseconds;
+        final totalTime = gameTime * 1000; // ゲーム時間をミリ秒換算
+        progress = 1.0 - (elapsed / totalTime);
+
+        if (elapsed >= totalTime) {
+          progress = 0.0;
+          timer.cancel();
+          showResults();
+        }
+      });
+    });
+
+    Timer.periodic(Duration(seconds: 2), (timer) {
+      if (gameTime <= 0 || !mounted) {
         timer.cancel();
-        showResults();
+      } else {
+        setState(() {
+          pollutionImages.addAll(generatePollutionImages());
+        });
       }
     });
   }
@@ -80,8 +94,8 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
   List<PollutionImage> generatePollutionImages() {
     List<PollutionImage> images = [];
     for (int i = 0; i < maxPollutionImages; i++) {
-      double top = random.nextDouble() * 300;
-      double left = random.nextDouble() * 400;
+      double top = 100 + random.nextDouble() * 300;
+      double left = random.nextDouble() * 300;
       Color color = [Colors.red, Colors.blue, Colors.green][random.nextInt(3)];
       images.add(PollutionImage(
         key: UniqueKey(),
@@ -120,9 +134,8 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ResultScreen(
-              scorePercentage:
-                  (score / maxPollutionImages) * 3.5), //１個消すと入る得点の値
+          builder: (context) =>
+              ResultScreen(scorePercentage: (score / maxPollutionImages) * 4.6),
         ),
       );
     }
@@ -137,9 +150,14 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: backgroundColor,
-      appBar: AppBar(title: Text("")),
+      appBar: AppBar(
+        title: Text("ゲーム画面"),
+        automaticallyImplyLeading: false,
+      ),
       body: Stack(
         children: [
           if (countdown > 0)
@@ -149,7 +167,10 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
               top: 20,
               left: 20,
               right: 20,
-              child: LinearProgressIndicator(value: progress),
+              child: Container(
+                height: 10, // 元の2倍の高さ
+                child: LinearProgressIndicator(value: progress),
+              ),
             ),
             Stack(children: pollutionImages.cast<Widget>()),
             Positioned(
@@ -163,34 +184,30 @@ class _TimeTrialScreenState extends State<TimeTrialScreen> {
                     imagePath: 'assets/red-light.png',
                     onTap: () => setState(() {
                       selectedLight = 'red';
-                      backgroundColor = Colors.red.withOpacity(0.3);
+                      backgroundColor =
+                          const Color.fromARGB(255, 245, 179, 175);
                     }),
                   ),
                   LightIcon(
                     imagePath: 'assets/blue-light.png',
                     onTap: () => setState(() {
                       selectedLight = 'blue';
-                      backgroundColor = Colors.blue.withOpacity(0.3);
+                      backgroundColor =
+                          const Color.fromARGB(255, 177, 212, 242);
                     }),
                   ),
                   LightIcon(
                     imagePath: 'assets/green-light.png',
                     onTap: () => setState(() {
                       selectedLight = 'green';
-                      backgroundColor = Colors.green.withOpacity(0.3);
+                      backgroundColor =
+                          const Color.fromARGB(255, 163, 230, 165);
                     }),
                   ),
                 ],
               ),
             ),
           ],
-          // if (countdown == 3)
-          //   Center(
-          //     child: ElevatedButton(
-          //       onPressed: startGameCountdown,
-          //       child: Text("スタート"),
-          //     ),
-          //   ),
         ],
       ),
     );
@@ -221,21 +238,14 @@ class PollutionImage extends StatelessWidget {
     } else if (color == Colors.green) {
       imagePath = 'assets/Enemy3.png';
     } else {
-      imagePath = ''; //imagePathの空白を入れておかないとエラーが出る。
+      imagePath = '';
     }
 
     return Positioned(
       top: top,
       left: left,
       child: GestureDetector(
-        onTap: () {
-          if (color ==
-              context
-                  .findAncestorStateOfType<_TimeTrialScreenState>()
-                  ?.getSelectedColor()) {
-            onRemove();
-          }
-        },
+        onTap: onRemove,
         child: Image.asset(
           imagePath,
           width: 50,
@@ -275,13 +285,17 @@ class ResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("結果")),
+      appBar: AppBar(
+        title: Text("結果"),
+        automaticallyImplyLeading: false,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
                 style: TextStyle(fontSize: 30)),
+            SizedBox(height: 20),
             TextButton(
               style: TextButton.styleFrom(
                 fixedSize: const Size(180, 55),
@@ -294,13 +308,9 @@ class ResultScreen extends StatelessWidget {
               },
               child: Text('ランキング'),
             ),
-            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.popUntil(
-                    context,
-                    (route) => route
-                        .isFirst); // This goes back to the first screen in the stack.
+                Navigator.popUntil(context, (route) => route.isFirst);
               },
               child: Text('マップに戻る'),
             ),
