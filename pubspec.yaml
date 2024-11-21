@@ -46,11 +46,12 @@ flutter:
    - assets/red-light.png
    - assets/green-light.png
    - assets/CreateImage.jpg
+   - assets/Splash_Image.png
 
   #スプラッシュ画面の設定
 flutter_native_splash:
   color: "#42a5f5"
-  image: assets/splash_image.jpg
+  image: assets/Splash_Image.png
   android: true
   ios: true
   web: true
