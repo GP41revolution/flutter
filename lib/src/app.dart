@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/Map.dart';
 import 'package:flutter_application_1/screen/Menu.dart';
@@ -33,7 +34,26 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  String text = "";
+  String usernameText = "";
   File? _image; // 選択した画像ファイルを格納
+
+  // Firestoreインスタンスの取得
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Firestoreにデータを保存するメソッド
+  Future<void> _saveUserToFirestore(String username) async {
+    try {
+      await _firestore.collection('users').add({
+        'username': username,
+        'created_at': Timestamp.now(),
+        'profile_image': _image != null ? _image!.path : null,
+      });
+      print("ユーザー情報を保存しました");
+    } catch (e) {
+      print("Firestoreエラー: $e");
+    }
+  }
 
   // 画像を選択するメソッド
   Future<void> _pickImage() async {
@@ -65,22 +85,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: _pickImage, // タップ時に画像を選択
+                onTap: _pickImage, // 画像選択メソッドを呼び出し
                 child: Container(
                   width: 80,
                   height: 80,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 0, 234, 255),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 3,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
                   child: Center(
                     child: _image != null
                         ? Image.file(
@@ -90,7 +98,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             fit: BoxFit.cover,
                           )
                         : Image.asset(
-                            'assets/Camera_icon.png', // デフォルトの画像
+                            'assets/Enemy3.png', // デフォルトの画像
                             width: 200,
                             height: 200,
                             fit: BoxFit.contain,
@@ -111,17 +119,28 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     labelText: 'Username',
                     border: UnderlineInputBorder(),
                   ),
+                  onChanged: (value) {
+                    text = value;
+                  },
                 ),
               ),
               SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MyStatefulWidget(),
-                    ),
-                  );
+                onPressed: () async {
+                  if (text.isNotEmpty) {
+                    await _saveUserToFirestore(text);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyStatefulWidget(),
+                      ),
+                    );
+                    setState(() {
+                      usernameText = text; // ボタン押下時にTextFieldの内容をセット
+                    });
+                  } else {
+                    print("Usernameを入力してください");
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(

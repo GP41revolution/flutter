@@ -46,17 +46,15 @@ class DefaultFirebaseOptions {
     messagingSenderId: '522341973463',
     projectId: 'ih14a-gp41',
     authDomain: 'ih14a-gp41.firebaseapp.com',
-    databaseURL: 'https://ih14a-gp41-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'ih14a-gp41.firebasestorage.app',
     measurementId: 'G-J5V2TD6GQS',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDSHZEYoL36mO3Y8zfYRi3Sd-1j75-jAL0',
-    appId: '1:522341973463:android:751f38efa7585074b45f92',
+    appId: '1:522341973463:android:e3798a07f09b2a09b45f92',
     messagingSenderId: '522341973463',
     projectId: 'ih14a-gp41',
-    databaseURL: 'https://ih14a-gp41-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'ih14a-gp41.firebasestorage.app',
   );
 
@@ -65,7 +63,6 @@ class DefaultFirebaseOptions {
     appId: '1:522341973463:ios:d076ece496044ca2b45f92',
     messagingSenderId: '522341973463',
     projectId: 'ih14a-gp41',
-    databaseURL: 'https://ih14a-gp41-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'ih14a-gp41.firebasestorage.app',
     iosBundleId: 'com.example.flutterApplication1',
   );
@@ -75,7 +72,6 @@ class DefaultFirebaseOptions {
     appId: '1:522341973463:ios:d076ece496044ca2b45f92',
     messagingSenderId: '522341973463',
     projectId: 'ih14a-gp41',
-    databaseURL: 'https://ih14a-gp41-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'ih14a-gp41.firebasestorage.app',
     iosBundleId: 'com.example.flutterApplication1',
   );
@@ -86,7 +82,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '522341973463',
     projectId: 'ih14a-gp41',
     authDomain: 'ih14a-gp41.firebaseapp.com',
-    databaseURL: 'https://ih14a-gp41-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'ih14a-gp41.firebasestorage.app',
     measurementId: 'G-4MZKFMM59V',
   );
