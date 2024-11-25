@@ -21,6 +21,7 @@ dependencies:
   hive_flutter: ^1.1.0
   introduction_screen: ^3.1.14
   firebase_core: ^3.8.0
+  cloud_firestore: ^5.5.0
 
 dev_dependencies:
   flutter_test:
@@ -46,12 +47,12 @@ flutter:
    - assets/red-light.png
    - assets/green-light.png
    - assets/CreateImage.jpg
-   - assets/Splash_Image.png
+   - assets/Splash_Image1.jpg
 
   #スプラッシュ画面の設定
 flutter_native_splash:
   color: "#42a5f5"
-  image: assets/Splash_Image.png
+  image: assets/Splash_Image1.jpg
   android: true
   ios: true
   web: true
