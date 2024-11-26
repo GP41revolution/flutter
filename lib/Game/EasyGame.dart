@@ -95,7 +95,6 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
 
       if (gameTime <= 0) {
         timer.cancel();
-        // addScoreData();
         showResults();
       }
     });
@@ -152,7 +151,7 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
         context,
         MaterialPageRoute(
           builder: (context) =>
-              ResultScreen(scorePercentage: (score / maxPollutionImages) * 4.9),
+              ResultScreen(scorePercentage: (score / maxPollutionImages) * 3.2),
         ),
       );
     }
