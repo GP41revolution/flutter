@@ -21,11 +21,7 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
   List<PollutionImage> pollutionImages = [];
   Random random = Random();
   int score = 0;
-  int maxPollutionImages = 1;
-  bool debugMode = true; // デバッグモードを有効にするフラグ
-  double debugAreaTopOffset = 100; // 生成エリアの上部オフセット
-  double debugAreaHeight = 300; // 生成エリアの高さ
-  double debugAreaWidth = 300; // 生成エリアの幅
+  int maxPollutionImages = 1; // 1秒あたりの最大生成数
   Timer? countdownTimer;
   Timer? gameTimer;
 
@@ -66,6 +62,7 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
 
     final startTime = DateTime.now();
 
+    // ゲームタイマー
     gameTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
       if (!mounted) {
         timer.cancel(); // ウィジェットが破棄されている場合はタイマーを停止
@@ -84,18 +81,15 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
       });
     });
 
+    // ばい菌生成タイマー
     Timer.periodic(Duration(seconds: 1), (timer) {
-      if (gameTime <= 0 || !mounted) {
+      if (!mounted || gameTime <= 1) {
+        // ゲーム時間が1秒以下になったら生成停止
         timer.cancel();
       } else {
         setState(() {
           pollutionImages.addAll(generatePollutionImages());
         });
-      }
-
-      if (gameTime <= 0) {
-        timer.cancel();
-        showResults();
       }
     });
   }
@@ -138,20 +132,18 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
     }
   }
 
-  // static final FirebaseFirestore db = FirebaseFirestore.instance;
-  // static final CollectionReference User01 = db.collection('User01');
-
-  // void addScoreData() async {
-  //   await User01.add({'Easy': 'score'});
-  // }
-
   void showResults() {
     if (mounted) {
+      final totalPossiblePollutions =
+          gameTime * maxPollutionImages; // ゲーム中の最大生成数
+      final scorePercentage = (score / totalPossiblePollutions) * 100;
+
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              ResultScreen(scorePercentage: (score / maxPollutionImages) * 3.2),
+          builder: (context) => ResultScreen(
+            scorePercentage: scorePercentage,
+          ),
         ),
       );
     }
@@ -329,15 +321,12 @@ class ResultScreen extends StatelessWidget {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                fixedSize: const Size(180, 55), // サイズをランキングボタンと同じに
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
-                backgroundColor:
-                    const Color.fromARGB(255, 195, 213, 237), // 背景色
+                fixedSize: const Size(180, 55),
               ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
               },
-              child: Text('マップに戻る'),
+              child: Text('マップ戻る'),
             ),
           ],
         ),
