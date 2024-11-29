@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Game/Game.dart';
+import 'package:flutter_application_1/Game/HardGame.dart';
 
 void main() => runApp(MyApp());
 
@@ -85,7 +86,7 @@ class _ShinjukuPageState extends State<ShinjukuPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TimeTrialScreen(startCountdown: true),
+                    builder: (context) => HardGame(startCountdown: true),
                   ),
                 );
               },
