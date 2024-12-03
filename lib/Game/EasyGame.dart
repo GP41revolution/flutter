@@ -138,7 +138,7 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => ResultScreen(
-            scorePercentage: (score / maxPollutionImages) * 4.9),
+            scorePercentage: (score / maxPollutionImages) * 2.5),
         ),
       );
     }
@@ -148,7 +148,7 @@ Future<void> saveResultToFirestore(BuildContext context) async {
   final firestore = FirebaseFirestore.instance;
   final username = Provider.of<UserProvider>(context, listen: false).username;
 
-  double scorePercentage = (score / maxPollutionImages) * 4.9;
+  double scorePercentage = (score / maxPollutionImages) * 2.5;
 
   try {
     await firestore.collection('easy').add({
@@ -294,6 +294,60 @@ class LightIcon extends StatelessWidget {
         imagePath,
         width: 50,
         height: 50,
+      ),
+    );
+  }
+}
+
+class ResultScreen extends StatelessWidget {
+  final double scorePercentage;
+
+  const ResultScreen({Key? key, required this.scorePercentage})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("結果"),
+        automaticallyImplyLeading: false,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
+                style: TextStyle(fontSize: 30)),
+            SizedBox(height: 20),
+            TextButton(
+              style: TextButton.styleFrom(
+                fixedSize: const Size(180, 55),
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                backgroundColor: const Color.fromARGB(255, 167, 209, 244),
+              ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RankPageScreens()));
+              },
+              child: Text('ランキング'),
+            ),
+            SizedBox(
+              height: 10, //ボタンとの間に空白
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(180, 55), // サイズをランキングボタンと同じに
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
+                backgroundColor:
+                    const Color.fromARGB(255, 195, 213, 237), // 背景色
+              ),
+              onPressed: () {
+                Navigator.popUntil(context, (route) => route.isFirst);
+              },
+              child: Text('マップに戻る'),
+            ),
+          ],
+        ),
       ),
     );
   }
