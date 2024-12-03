@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore のインポート
 import 'package:flutter_application_1/Game/Game.dart';
 import 'package:flutter_application_1/screen/Rank.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/user_provider.dart';
+
 
 class EasyGameScreen extends StatefulWidget {
   final bool startCountdown;
@@ -130,7 +133,7 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
 
   void showResults() {
     if (mounted) {
-      saveResultToFirestore(); // Firestore に結果を保存
+      saveResultToFirestore(context); // Firestore に結果を保存
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -141,19 +144,21 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
     }
   }
 
-  Future<void> saveResultToFirestore() async {
-    final firestore = FirebaseFirestore.instance;
+Future<void> saveResultToFirestore(BuildContext context) async {
+  final firestore = FirebaseFirestore.instance;
+  final username = Provider.of<UserProvider>(context, listen: false).username;
 
-    try {
-      await firestore.collection('easy').add({
-        'score': score,
-        'timestamp': DateTime.now(),
-      });
-      print("Game result saved to Firestore.");
-    } catch (e) {
-      print("Error saving game result: $e");
-    }
+  try {
+    await firestore.collection('easy').add({
+      'username': username,
+      'score': score,
+      'timestamp': DateTime.now(),
+    });
+    print("Game result saved to Firestore in 'easy' collection.");
+  } catch (e) {
+    print("Error saving game result to Firestore: $e");
   }
+}
 
   @override
   void dispose() {

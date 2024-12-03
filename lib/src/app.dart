@@ -6,6 +6,8 @@ import 'package:flutter_application_1/screen/Menu.dart';
 import 'package:flutter_application_1/screen/Rank.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/user_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,11 +18,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Aqua Guardian',
-      theme: ThemeData(primaryColor: Colors.blue[400]),
-      home: const WelcomeScreen(),
+    return ChangeNotifierProvider(
+      create: (_) => UserProvider(), // UserProviderの提供
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Aqua Guardian',
+        theme: ThemeData(primaryColor: Colors.blue[400]),
+        home: const WelcomeScreen(),
+      ),
     );
   }
 }
@@ -154,6 +159,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         welcomeMessage = "おかえりなさい、$username!";
                         _showWarning = false;
                       });
+                      // UserProviderでusernameを更新
+                      Provider.of<UserProvider>(context, listen: false)
+                          .setUsername(username);
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -166,6 +174,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         welcomeMessage = "ようこそ、$username!";
                         _showWarning = false;
                       });
+                      // UserProviderでusernameを更新
+                      Provider.of<UserProvider>(context, listen: false)
+                          .setUsername(username);
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
