@@ -109,7 +109,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             fit: BoxFit.cover,
                           )
                         : Image.asset(
-                            'assets/Enemy3.png',
+                            'assets/logo1.png',
                             width: 200,
                             height: 200,
                             fit: BoxFit.contain,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screen/Rank.dart';
 
 class NormalGameScreen extends StatefulWidget {
   final bool startCountdown;
@@ -238,7 +239,7 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
   }
 }
 
-class PollutionImage extends StatelessWidget {
+class PollutionImage extends StatefulWidget {
   final Color color;
   final VoidCallback onRemove;
   final double top;
@@ -253,27 +254,67 @@ class PollutionImage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _PollutionImageState createState() => _PollutionImageState();
+}
+
+class _PollutionImageState extends State<PollutionImage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // アニメーションコントローラを初期化
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1), // 1秒でフェードイン
+    );
+
+    // 不透明度アニメーションの設定
+    _opacityAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeIn,
+      ),
+    );
+
+    // アニメーション開始
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String imagePath;
-    if (color == Colors.red) {
+    if (widget.color == Colors.red) {
       imagePath = 'assets/Enemy1.png';
-    } else if (color == Colors.blue) {
+    } else if (widget.color == Colors.blue) {
       imagePath = 'assets/Enemy2.png';
-    } else if (color == Colors.green) {
+    } else if (widget.color == Colors.green) {
       imagePath = 'assets/Enemy3.png';
     } else {
       imagePath = '';
     }
 
     return Positioned(
-      top: top,
-      left: left,
+      top: widget.top,
+      left: widget.left,
       child: GestureDetector(
-        onTap: onRemove,
-        child: Image.asset(
-          imagePath,
-          width: 50,
-          height: 50,
+        onTap: widget.onRemove,
+        child: FadeTransition(
+          opacity: _opacityAnimation,
+          child: Image.asset(
+            imagePath,
+            width: 50,
+            height: 50,
+          ),
         ),
       ),
     );
@@ -291,10 +332,15 @@ class LightIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Image.asset(
-        imagePath,
-        width: 50,
-        height: 50,
+      child: Container(
+        width: 116, // タップ範囲の幅
+        height: 80, // タップ範囲の高さ
+        alignment: Alignment.center,
+        child: Image.asset(
+          imagePath,
+          width: 110, // 実際のライト画像の幅
+          height: 50, // 実際のライト画像の高さ
+        ),
       ),
     );
   }
@@ -320,6 +366,42 @@ class ResultScreen extends StatelessWidget {
             Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
                 style: TextStyle(fontSize: 30)),
             SizedBox(height: 20),
+            TextButton(
+              style: TextButton.styleFrom(
+                fixedSize: const Size(180, 55),
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                backgroundColor: const Color.fromARGB(255, 167, 209, 244),
+              ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RankPageScreens()));
+              },
+              child: Text('ランキング'),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(180, 55), // サイズをランキングボタンと同じに
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
+                backgroundColor:
+                    const Color.fromARGB(255, 195, 213, 237), // 背景色
+              ),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        NormalGameScreen(startCountdown: true), //ゲームをリスタートします
+                  ),
+                );
+              },
+              child: Text('リスタート'),
+            ),
+            SizedBox(
+              height: 10, //ボタンとの間に空白
+            ),
             TextButton(
               style: TextButton.styleFrom(
                 fixedSize: const Size(180, 55),

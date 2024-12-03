@@ -254,7 +254,7 @@ class _HardGame extends State<HardGame> {
   }
 }
 
-class PollutionImage extends StatelessWidget {
+class PollutionImage extends StatefulWidget {
   final Color color;
   final VoidCallback onRemove;
   final double top;
@@ -269,27 +269,67 @@ class PollutionImage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _PollutionImageState createState() => _PollutionImageState();
+}
+
+class _PollutionImageState extends State<PollutionImage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // アニメーションコントローラを初期化
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1), // 1秒でフェードイン
+    );
+
+    // 不透明度アニメーションの設定
+    _opacityAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeIn,
+      ),
+    );
+
+    // アニメーション開始
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String imagePath;
-    if (color == Colors.red) {
+    if (widget.color == Colors.red) {
       imagePath = 'assets/Enemy1.png';
-    } else if (color == Colors.blue) {
+    } else if (widget.color == Colors.blue) {
       imagePath = 'assets/Enemy2.png';
-    } else if (color == Colors.green) {
+    } else if (widget.color == Colors.green) {
       imagePath = 'assets/Enemy3.png';
     } else {
       imagePath = '';
     }
 
     return Positioned(
-      top: top,
-      left: left,
+      top: widget.top,
+      left: widget.left,
       child: GestureDetector(
-        onTap: onRemove,
-        child: Image.asset(
-          imagePath,
-          width: 50,
-          height: 50,
+        onTap: widget.onRemove,
+        child: FadeTransition(
+          opacity: _opacityAnimation,
+          child: Image.asset(
+            imagePath,
+            width: 50,
+            height: 50,
+          ),
         ),
       ),
     );
@@ -307,10 +347,15 @@ class LightIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Image.asset(
-        imagePath,
-        width: 50,
-        height: 50,
+      child: Container(
+        width: 116, // タップ範囲の幅
+        height: 80, // タップ範囲の高さ
+        alignment: Alignment.center,
+        child: Image.asset(
+          imagePath,
+          width: 110, // 実際のライト画像の幅
+          height: 50, // 実際のライト画像の高さ
+        ),
       ),
     );
   }
@@ -321,6 +366,8 @@ class ResultScreen extends StatelessWidget {
 
   const ResultScreen({Key? key, required this.scorePercentage})
       : super(key: key);
+
+  get webViewController => null;
 
   @override
   Widget build(BuildContext context) {
@@ -359,9 +406,27 @@ class ResultScreen extends StatelessWidget {
                     const Color.fromARGB(255, 195, 213, 237), // 背景色
               ),
               onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        HardGame(startCountdown: true), //ゲームをリスタートします
+                  ),
+                );
+              },
+              child: Text('リスタート'),
+            ),
+            SizedBox(
+              height: 10, //ボタンとの間に空白
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(180, 55),
+              ),
+              onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
               },
-              child: Text('マップに戻る'),
+              child: Text('マップ戻る'),
             ),
           ],
         ),

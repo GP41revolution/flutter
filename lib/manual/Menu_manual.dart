@@ -151,14 +151,14 @@ class _IntroPageState extends State<IntroPage> {
                   Image.asset(
                     imagePath,
                     height: 240,
-                    width: 180,
+                    width: 150,
                   ),
                   if (secondImagePath != null) ...[
                     SizedBox(height: 10), //２枚目の画像とのスペース
                     Image.asset(
                       secondImagePath,
                       height: 240,
-                      width: 180,
+                      width: 150,
                     ), //２枚目の画像パス
                   ]
                 ],

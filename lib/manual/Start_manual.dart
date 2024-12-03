@@ -42,7 +42,8 @@ class _StartManualPageState extends State<StartManualPage> {
   }
 
   void _nextPage() async {
-    if (_currentPage < 2) {
+    //ボタンを押した時のページの遷移数
+    if (_currentPage < 3) {
       _pageController.nextPage(
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -120,13 +121,13 @@ class _StartManualPageState extends State<StartManualPage> {
                 onTap: _nextPage,
                 child: Container(
                   padding:
-                      EdgeInsets.symmetric(vertical: 11.0, horizontal: 150.0),
+                      EdgeInsets.symmetric(vertical: 11.0, horizontal: 120.0),
                   decoration: BoxDecoration(
                     color: Colors.red, // 赤いボタン
                     borderRadius: BorderRadius.circular(8.0), // ボタンの角を丸く
                   ),
                   child: Text(
-                    _currentPage == 2 ? 'スタート！' : '次へ',
+                    _currentPage == 3 ? 'スタート！' : '次へ',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -204,14 +205,14 @@ class _StartManualPageState extends State<StartManualPage> {
                   Image.asset(
                     imagePath,
                     height: 240,
-                    width: 180,
+                    width: 150,
                   ),
                   if (secondImagePath != null) ...[
                     SizedBox(height: 10),
                     Image.asset(
                       secondImagePath,
                       height: 240,
-                      width: 180,
+                      width: 150,
                     ),
                   ]
                 ],
