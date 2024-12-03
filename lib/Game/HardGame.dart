@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/Rank.dart';
 
@@ -149,6 +150,7 @@ class _HardGame extends State<HardGame> {
 
   void showResults() {
     if (mounted) {
+      saveResultToFirestore(); // Firestore に結果を保存
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -156,6 +158,20 @@ class _HardGame extends State<HardGame> {
               scorePercentage: (score / maxPollutionImages) * 3.332),
         ),
       );
+    }
+  }
+
+  Future<void> saveResultToFirestore() async {
+    final firestore = FirebaseFirestore.instance;
+
+    try {
+      await firestore.collection('hard').add({
+        'score': score,
+        'timestamp': DateTime.now(),
+      });
+      print("Game result saved to Firestore in 'hard' collection.");
+    } catch (e) {
+      print("Error saving game result to Firestore: $e");
     }
   }
 

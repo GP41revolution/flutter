@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore のインポート
+import 'package:flutter_application_1/Game/Game.dart';
 import 'package:flutter_application_1/screen/Rank.dart';
 
 class EasyGameScreen extends StatefulWidget {
@@ -21,7 +23,8 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
   List<PollutionImage> pollutionImages = [];
   Random random = Random();
   int score = 0;
-  int maxPollutionImages = 1; // 1秒あたりの最大生成数
+  int maxPollutionImages = 1;
+
   Timer? countdownTimer;
   Timer? gameTimer;
 
@@ -37,13 +40,11 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
     setState(() {
       countdown = 3; // 初期値
     });
-
     countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (!mounted) return; // mounted チェック
+      if (!mounted) return;
       setState(() {
         countdown--;
       });
-
       if (countdown == 0) {
         countdownTimer?.cancel();
         startGame();
@@ -61,18 +62,15 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
     });
 
     final startTime = DateTime.now();
-
-    // ゲームタイマー
     gameTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
       if (!mounted) {
-        timer.cancel(); // ウィジェットが破棄されている場合はタイマーを停止
+        timer.cancel();
         return;
       }
       setState(() {
         final elapsed = DateTime.now().difference(startTime).inMilliseconds;
         final totalTime = gameTime * 1000; // ゲーム時間をミリ秒換算
         progress = 1.0 - (elapsed / totalTime);
-
         if (elapsed >= totalTime) {
           progress = 0.0;
           timer.cancel();
@@ -81,10 +79,8 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
       });
     });
 
-    // ばい菌生成タイマー
     Timer.periodic(Duration(seconds: 1), (timer) {
-      if (!mounted || gameTime <= 1) {
-        // ゲーム時間が1秒以下になったら生成停止
+      if (gameTime <= 0 || !mounted) {
         timer.cancel();
       } else {
         setState(() {
@@ -134,18 +130,28 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
 
   void showResults() {
     if (mounted) {
-      final totalPossiblePollutions =
-          gameTime * maxPollutionImages; // ゲーム中の最大生成数
-      final scorePercentage = (score / totalPossiblePollutions) * 100;
-
+      saveResultToFirestore(); // Firestore に結果を保存
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ResultScreen(
-            scorePercentage: scorePercentage,
-          ),
+          builder: (context) =>
+              ResultScreen(scorePercentage: (score / maxPollutionImages) * 4.9),
         ),
       );
+    }
+  }
+
+  Future<void> saveResultToFirestore() async {
+    final firestore = FirebaseFirestore.instance;
+
+    try {
+      await firestore.collection('easy').add({
+        'score': score,
+        'timestamp': DateTime.now(),
+      });
+      print("Game result saved to Firestore.");
+    } catch (e) {
+      print("Error saving game result: $e");
     }
   }
 
@@ -158,8 +164,6 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
@@ -169,14 +173,19 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
       body: Stack(
         children: [
           if (countdown > 0)
-            Center(child: Text('$countdown', style: TextStyle(fontSize: 50))),
+            Center(
+              child: Text(
+                '$countdown',
+                style: TextStyle(fontSize: 50),
+              ),
+            ),
           if (countdown == 0) ...[
             Positioned(
               top: 20,
               left: 20,
               right: 20,
               child: Container(
-                height: 10, // 元の2倍の高さ
+                height: 10,
                 child: LinearProgressIndicator(value: progress),
               ),
             ),
@@ -248,7 +257,6 @@ class PollutionImage extends StatelessWidget {
     } else {
       imagePath = '';
     }
-
     return Positioned(
       top: top,
       left: left,
@@ -279,57 +287,6 @@ class LightIcon extends StatelessWidget {
         imagePath,
         width: 50,
         height: 50,
-      ),
-    );
-  }
-}
-
-class ResultScreen extends StatelessWidget {
-  final double scorePercentage;
-
-  const ResultScreen({Key? key, required this.scorePercentage})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("結果"),
-        automaticallyImplyLeading: false,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
-                style: TextStyle(fontSize: 30)),
-            SizedBox(height: 20),
-            TextButton(
-              style: TextButton.styleFrom(
-                fixedSize: const Size(180, 55),
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                backgroundColor: const Color.fromARGB(255, 167, 209, 244),
-              ),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RankPageScreens()));
-              },
-              child: Text('ランキング'),
-            ),
-            SizedBox(
-              height: 10, //ボタンとの間に空白
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(180, 55),
-              ),
-              onPressed: () {
-                Navigator.popUntil(context, (route) => route.isFirst);
-              },
-              child: Text('マップ戻る'),
-            ),
-          ],
-        ),
       ),
     );
   }
