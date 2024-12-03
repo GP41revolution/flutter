@@ -54,47 +54,47 @@ class _RankPageScreensState extends State<RankPageScreens>
     });
   }
 
-  Future<void> fetchRankData() async {
-    try {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
+Future<void> fetchRankData() async {
+  try {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-      // 各難易度ごとのデータを取得
-      var easySnapshot = await firestore.collection('easy').get();
-      var normalSnapshot = await firestore.collection('normal').get();
-      var hardSnapshot = await firestore.collection('hard').get();
+    // 各難易度ごとのデータを取得
+    var easySnapshot = await firestore.collection('easy').get();
+    var normalSnapshot = await firestore.collection('normal').get();
+    var hardSnapshot = await firestore.collection('hard').get();
 
-      // データをリストに格納
-      setState(() {
-        easyRankData = easySnapshot.docs.map((doc) {
-          return {
-            'username': doc['username'],
-            'score': doc['score'],
-          };
-        }).toList();
+    // データをリストに格納
+    setState(() {
+      easyRankData = easySnapshot.docs.map((doc) {
+        return {
+          'username': doc['username'],
+          'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
+        };
+      }).toList();
 
-        normalRankData = normalSnapshot.docs.map((doc) {
-          return {
-            'username': doc['username'],
-            'score': doc['score'],
-          };
-        }).toList();
+      normalRankData = normalSnapshot.docs.map((doc) {
+        return {
+          'username': doc['username'],
+          'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
+        };
+      }).toList();
 
-        hardRankData = hardSnapshot.docs.map((doc) {
-          return {
-            'username': doc['username'],
-            'score': doc['score'],
-          };
-        }).toList();
+      hardRankData = hardSnapshot.docs.map((doc) {
+        return {
+          'username': doc['username'],
+          'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
+        };
+      }).toList();
 
-        // 各リストをスコア順にソート
-        easyRankData.sort((a, b) => b['score'].compareTo(a['score']));
-        normalRankData.sort((a, b) => b['score'].compareTo(a['score']));
-        hardRankData.sort((a, b) => b['score'].compareTo(a['score']));
-      });
-    } catch (e) {
-      print('Error fetching rank data: $e');
-    }
+      // 各リストをスコア順にソート
+      easyRankData.sort((a, b) => b['score'].compareTo(a['score']));
+      normalRankData.sort((a, b) => b['score'].compareTo(a['score']));
+      hardRankData.sort((a, b) => b['score'].compareTo(a['score']));
+    });
+  } catch (e) {
+    print('Error fetching rank data: $e');
   }
+}
 
   @override
   void dispose() {
