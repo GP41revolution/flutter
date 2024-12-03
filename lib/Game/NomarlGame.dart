@@ -161,7 +161,7 @@ Future<void> saveResultToFirestore(BuildContext context) async {
   try {
     await firestore.collection('normal').add({
       'username': username,
-      'score': "${scorePercentage.toStringAsFixed(1)}%",
+      'score': scorePercentage.toStringAsFixed(1),
       'timestamp': DateTime.now(),
     });
     print("Game result saved to Firestore in 'normal' collection.");

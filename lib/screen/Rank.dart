@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -22,87 +20,23 @@ class RankPageScreens extends StatefulWidget {
 
 class _RankPageScreensState extends State<RankPageScreens>
     with SingleTickerProviderStateMixin {
-// String UserName_Text = "User01";
-// _RankPageScreensState({this.UserName_Text});
-
-  Future<void> getSpecificDocument() async {
-    try {
-      // Firestoreのインスタンスを取得
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-      // コレクション名とドキュメントIDを指定してドキュメントを取得
-      DocumentSnapshot documentSnapshot =
-          await firestore.collection('User01').doc('Easy').get();
-
-      if (documentSnapshot.exists) {
-        // ドキュメントが存在する場合、データを取得
-        var data = documentSnapshot.get('Score');
-        print('--------------------Document data: ${data}');
-
-        // // 特定のフィールドにアクセスする例
-        // String fieldValue = data['Score'];
-        // print('--------------------Field value: $fieldValue');
-      } else {
-        print('--------------------Document does not exist');
-      }
-    } catch (e) {
-      print('--------------------Error getting document: $e');
-    }
-  }
-
-  Future<void> updateRankDataFromFirestore() async {
-    try {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-      // User01のEasyスコアを取得
-      DocumentSnapshot docSnapshot =
-          await firestore.collection('User01').doc('Easy').get();
-
-      if (docSnapshot.exists) {
-        int newScore = docSnapshot.get('Score') as int;
-
-        setState(() {
-          // User01のスコアを更新
-          int index =
-              rankData.indexWhere((item) => item["username"] == "User01");
-          if (index != -1) {
-            rankData[index]["score"] = newScore;
-          }
-
-          // スコアでソート
-          rankData.sort((a, b) => b['score'].compareTo(a['score']));
-        });
-
-        print('Rank data updated: $rankData');
-      } else {
-        print('Document does not exist');
-      }
-    } catch (e) {
-      print('Error updating rank data: $e');
-    }
-  }
-
-  List<Map<String, dynamic>> rankData = [
-    {"username": "User01", "score": 9564},
-    {"username": "User02", "score": 8564},
-    {"username": "User03", "score": 5564},
-    {"username": "User04", "score": 4564},
-    {"username": "User05", "score": 3564},
-    {"username": "User06", "score": 1564},
-  ];
-
   late TabController _tabController;
   String headerText = "ランキング";
+
+  // 各難易度のランキングデータ
+  List<Map<String, dynamic>> easyRankData = [];
+  List<Map<String, dynamic>> normalRankData = [];
+  List<Map<String, dynamic>> hardRankData = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
-    // 関数を呼び出す
-    getSpecificDocument();
-    updateRankDataFromFirestore();
-    // 難易度ごとのランキング名
+    // Firestoreからデータを取得
+    fetchRankData();
+
+    // タブ変更時にヘッダーを更新
     _tabController.addListener(() {
       setState(() {
         switch (_tabController.index) {
@@ -120,6 +54,48 @@ class _RankPageScreensState extends State<RankPageScreens>
     });
   }
 
+  Future<void> fetchRankData() async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // 各難易度ごとのデータを取得
+      var easySnapshot = await firestore.collection('easy').get();
+      var normalSnapshot = await firestore.collection('normal').get();
+      var hardSnapshot = await firestore.collection('hard').get();
+
+      // データをリストに格納
+      setState(() {
+        easyRankData = easySnapshot.docs.map((doc) {
+          return {
+            'username': doc['username'],
+            'score': doc['score'],
+          };
+        }).toList();
+
+        normalRankData = normalSnapshot.docs.map((doc) {
+          return {
+            'username': doc['username'],
+            'score': doc['score'],
+          };
+        }).toList();
+
+        hardRankData = hardSnapshot.docs.map((doc) {
+          return {
+            'username': doc['username'],
+            'score': doc['score'],
+          };
+        }).toList();
+
+        // 各リストをスコア順にソート
+        easyRankData.sort((a, b) => b['score'].compareTo(a['score']));
+        normalRankData.sort((a, b) => b['score'].compareTo(a['score']));
+        hardRankData.sort((a, b) => b['score'].compareTo(a['score']));
+      });
+    } catch (e) {
+      print('Error fetching rank data: $e');
+    }
+  }
+
   @override
   void dispose() {
     _tabController.dispose();
@@ -128,8 +104,6 @@ class _RankPageScreensState extends State<RankPageScreens>
 
   @override
   Widget build(BuildContext context) {
-    rankData.sort((a, b) => b['score'].compareTo(a['score']));
-
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -147,7 +121,7 @@ class _RankPageScreensState extends State<RankPageScreens>
         ),
         body: Column(
           children: [
-            //でかいランキングヘッダー
+            // 大きいランキングヘッダー
             Container(
               padding: EdgeInsets.symmetric(vertical: 20.0),
               color: Colors.orangeAccent,
@@ -167,9 +141,9 @@ class _RankPageScreensState extends State<RankPageScreens>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  RankList(rankData: rankData),
-                  RankList(rankData: rankData),
-                  RankList(rankData: rankData),
+                  RankList(rankData: easyRankData),
+                  RankList(rankData: normalRankData),
+                  RankList(rankData: hardRankData),
                 ],
               ),
             ),
@@ -188,39 +162,42 @@ class RankList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: rankData.length,
-      itemBuilder: (context, index) {
-        return Container(
-          margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-          padding: EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-            color: Colors.deepPurple[200],
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: ListTile(
-            leading: index == 0
-                ? Icon(Icons.emoji_events, color: Colors.amber, size: 30)
-                : CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Text(
-                      "${index + 1}",
-                      style: TextStyle(fontSize: 20, color: Colors.deepPurple),
-                    ),
+    return rankData.isEmpty
+        ? Center(child: Text("データがありません"))
+        : ListView.builder(
+            itemCount: rankData.length,
+            itemBuilder: (context, index) {
+              return Container(
+                margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                padding: EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Colors.deepPurple[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ListTile(
+                  leading: index == 0
+                      ? Icon(Icons.emoji_events, color: Colors.amber, size: 30)
+                      : CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: Text(
+                            "${index + 1}",
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.deepPurple),
+                          ),
+                        ),
+                  title: Text(
+                    rankData[index]["username"],
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
-            title: Text(
-              rankData[index]["username"],
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            trailing: Text(
-              "${rankData[index]["score"]}",
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-          ),
-        );
-      },
-    );
+                  trailing: Text(
+                    "${rankData[index]["score"]}%",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              );
+            },
+          );
   }
 }
