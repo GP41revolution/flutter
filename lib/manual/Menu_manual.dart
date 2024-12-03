@@ -59,22 +59,24 @@ class _IntroPageState extends State<IntroPage> {
               },
               children: [
                 _buildPage(
-                  title: '機能紹介 1',
-                  description: 'このアプリでは、○○の機能を使って○○ができます。',
+                  title: 'このアプリについて',
+                  description: 'このゲームは除菌を行い、得点を挙げていくゲームです。',
                   color: Colors.blue,
                   imagePath: 'assets/splash_image.jpg',
                 ),
                 _buildPage(
-                  title: '機能紹介 2',
-                  description: '○○を利用して、○○も可能です。',
+                  title: '遊び方その１',
+                  description: 'マップごとに難易度が分かれている為、マップを選択し、難易度の確認を行います。',
                   color: Colors.green,
-                  imagePath: 'assets/splash_image.jpg',
+                  imagePath: 'assets/Manual(1).png',
+                  secondImagePath: 'assets/Manual(2).png',
                 ),
                 _buildPage(
-                  title: 'ブッスー',
-                  description: '下痢ポケモン。1日1回下痢をする。最近は腹の調子が良い。好きな言葉は「マンドリル」',
+                  title: '遊び方その２',
+                  description:
+                      'タップすることによって除菌を行うことができます。除菌を行い、得点を上げてランキング上位を目指しましょう！',
                   color: Colors.orange,
-                  imagePath: 'assets/CreateImage.jpg',
+                  imagePath: 'assets/Manual(3).png',
                 ),
               ],
             ),
@@ -118,20 +120,16 @@ class _IntroPageState extends State<IntroPage> {
     required String description,
     required Color color,
     required String imagePath,
+    String? secondImagePath, //2つ目の画像を入れるコード(オプション)
   }) {
     return Container(
-      color: color,
-      child: Center(
-        child: Padding(
+        color: color,
+        child: Center(
+            child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                imagePath,
-                width: 200,
-                height: 150,
-              ),
               SizedBox(height: 16),
               Text(
                 title,
@@ -146,10 +144,27 @@ class _IntroPageState extends State<IntroPage> {
                 style: TextStyle(fontSize: 18, color: Colors.white),
                 textAlign: TextAlign.center,
               ),
+              SizedBox(height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    imagePath,
+                    height: 240,
+                    width: 180,
+                  ),
+                  if (secondImagePath != null) ...[
+                    SizedBox(height: 10), //２枚目の画像とのスペース
+                    Image.asset(
+                      secondImagePath,
+                      height: 240,
+                      width: 180,
+                    ), //２枚目の画像パス
+                  ]
+                ],
+              ),
             ],
           ),
-        ),
-      ),
-    );
+        )));
   }
 }

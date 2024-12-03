@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Game/HardGame.dart';
 
 void main() => runApp(MyApp());
 
@@ -80,6 +81,10 @@ class _TakadaPageState extends State<TakadaPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HardGame(startCountdown: true)));
                 print('$selectedDifficulty でゲーム開始');
               },
               child: Text('スタート'),

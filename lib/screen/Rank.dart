@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,7 +22,67 @@ class RankPageScreens extends StatefulWidget {
 
 class _RankPageScreensState extends State<RankPageScreens>
     with SingleTickerProviderStateMixin {
-  final List<Map<String, dynamic>> rankData = [
+// String UserName_Text = "User01";
+// _RankPageScreensState({this.UserName_Text});
+
+  Future<void> getSpecificDocument() async {
+    try {
+      // Firestoreのインスタンスを取得
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // コレクション名とドキュメントIDを指定してドキュメントを取得
+      DocumentSnapshot documentSnapshot =
+          await firestore.collection('User01').doc('Easy').get();
+
+      if (documentSnapshot.exists) {
+        // ドキュメントが存在する場合、データを取得
+        var data = documentSnapshot.get('Score');
+        print('--------------------Document data: ${data}');
+
+        // // 特定のフィールドにアクセスする例
+        // String fieldValue = data['Score'];
+        // print('--------------------Field value: $fieldValue');
+      } else {
+        print('--------------------Document does not exist');
+      }
+    } catch (e) {
+      print('--------------------Error getting document: $e');
+    }
+  }
+
+  Future<void> updateRankDataFromFirestore() async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // User01のEasyスコアを取得
+      DocumentSnapshot docSnapshot =
+          await firestore.collection('User01').doc('Easy').get();
+
+      if (docSnapshot.exists) {
+        int newScore = docSnapshot.get('Score') as int;
+
+        setState(() {
+          // User01のスコアを更新
+          int index =
+              rankData.indexWhere((item) => item["username"] == "User01");
+          if (index != -1) {
+            rankData[index]["score"] = newScore;
+          }
+
+          // スコアでソート
+          rankData.sort((a, b) => b['score'].compareTo(a['score']));
+        });
+
+        print('Rank data updated: $rankData');
+      } else {
+        print('Document does not exist');
+      }
+    } catch (e) {
+      print('Error updating rank data: $e');
+    }
+  }
+
+  List<Map<String, dynamic>> rankData = [
     {"username": "User01", "score": 9564},
     {"username": "User02", "score": 8564},
     {"username": "User03", "score": 5564},
@@ -36,6 +99,9 @@ class _RankPageScreensState extends State<RankPageScreens>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
+    // 関数を呼び出す
+    getSpecificDocument();
+    updateRankDataFromFirestore();
     // 難易度ごとのランキング名
     _tabController.addListener(() {
       setState(() {

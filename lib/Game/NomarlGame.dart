@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screen/Rank.dart';
 
 class NormalGameScreen extends StatefulWidget {
   final bool startCountdown;
@@ -22,10 +21,6 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
   Random random = Random();
   int score = 0;
   int maxPollutionImages = 4;
-  bool debugMode = true; // デバッグモードを有効にするフラグ
-  double debugAreaTopOffset = 100; // 生成エリアの上部オフセット
-  double debugAreaHeight = 300; // 生成エリアの高さ
-  double debugAreaWidth = 300; // 生成エリアの幅
   Timer? countdownTimer;
   Timer? gameTimer;
 
@@ -85,7 +80,8 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
     });
 
     Timer.periodic(Duration(seconds: 2), (timer) {
-      if (gameTime <= 0 || !mounted) {
+      if (gameTime <= 2 || !mounted) {
+        // 終了直前にばい菌生成を停止
         timer.cancel();
       } else {
         setState(() {
@@ -135,11 +131,14 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
 
   void showResults() {
     if (mounted) {
+      // 最大スコア計算
+      int totalImages = maxPollutionImages * (gameTime ~/ 2); // 2秒ごとに生成
+      double scorePercentage = (score / totalImages) * 100;
+
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              ResultScreen(scorePercentage: (score / maxPollutionImages) * 4.6),
+          builder: (context) => ResultScreen(scorePercentage: scorePercentage),
         ),
       );
     }
@@ -211,6 +210,27 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
                 ],
               ),
             ),
+            // デバッグボタンを追加
+            // Positioned(
+            //   top: 70,
+            //   right: 20,
+            //   child: ElevatedButton(
+            //     onPressed: () {
+            //       setState(() {
+            //         int removedCount = pollutionImages.length; // 消去したばい菌の数を取得
+            //         score += removedCount; // スコアに加算
+            //         pollutionImages.clear(); // すべてのばい菌を消去
+            //       });
+            //     },
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.grey,
+            //     ),
+            //     child: Text(
+            //       "デバッグ: 全消去",
+            //       style: TextStyle(fontSize: 14),
+            //     ),
+            //   ),
+            // ),
           ],
         ],
       ),
@@ -305,22 +325,6 @@ class ResultScreen extends StatelessWidget {
                 fixedSize: const Size(180, 55),
                 foregroundColor: const Color.fromARGB(255, 0, 0, 0),
                 backgroundColor: const Color.fromARGB(255, 167, 209, 244),
-              ),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RankPageScreens()));
-              },
-              child: Text('ランキング'),
-            ),
-            SizedBox(
-              height: 10, //ボタンとの間に空白
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(180, 55), // サイズをランキングボタンと同じに
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
-                backgroundColor:
-                    const Color.fromARGB(255, 195, 213, 237), // 背景色
               ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
