@@ -142,8 +142,8 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              ResultScreen(scorePercentage: (score / maxPollutionImages) * 4.6),
+          builder: (context) => ResultScreen(
+            scorePercentage: (score / maxPollutionImages) * 4.6),
         ),
       );
     }
@@ -153,10 +153,12 @@ Future<void> saveResultToFirestore(BuildContext context) async {
   final firestore = FirebaseFirestore.instance;
   final username = Provider.of<UserProvider>(context, listen: false).username;
 
+  double scorePercentage = (score / maxPollutionImages) * 4.6;
+
   try {
     await firestore.collection('normal').add({
       'username': username,
-      'score': score,
+      'score': "${scorePercentage.toStringAsFixed(1)}%",
       'timestamp': DateTime.now(),
     });
     print("Game result saved to Firestore in 'normal' collection.");
