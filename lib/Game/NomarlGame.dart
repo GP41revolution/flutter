@@ -92,7 +92,10 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
         timer.cancel();
       } else {
         setState(() {
-          pollutionImages.addAll(generatePollutionImages());
+          // 残り時間が1秒を切った場合は生成しない
+          if (gameTime > 1) {
+            pollutionImages.addAll(generatePollutionImages());
+          }
         });
       }
     });
@@ -143,7 +146,7 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => ResultScreen(
-            scorePercentage: (score / maxPollutionImages) * 4.6),
+            scorePercentage: (score / maxPollutionImages) * 6.67),
         ),
       );
     }
@@ -153,7 +156,7 @@ Future<void> saveResultToFirestore(BuildContext context) async {
   final firestore = FirebaseFirestore.instance;
   final username = Provider.of<UserProvider>(context, listen: false).username;
 
-  double scorePercentage = (score / maxPollutionImages) * 4.6;
+  double scorePercentage = (score / maxPollutionImages) * 6.67;
 
   try {
     await firestore.collection('normal').add({

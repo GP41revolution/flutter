@@ -87,7 +87,10 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
         timer.cancel();
       } else {
         setState(() {
-          pollutionImages.addAll(generatePollutionImages());
+          // 残り時間が1秒を切った場合は生成しない
+          if (gameTime > 1) {
+            pollutionImages.addAll(generatePollutionImages());
+          }
         });
       }
     });
