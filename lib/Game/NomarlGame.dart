@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore のインポート
 import 'package:flutter_application_1/screen/Rank.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/user_provider.dart';
 
 class NormalGameScreen extends StatefulWidget {
   final bool startCountdown;
@@ -89,7 +92,10 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
         timer.cancel();
       } else {
         setState(() {
-          pollutionImages.addAll(generatePollutionImages());
+          // 残り時間が1秒を切った場合は生成しない
+          if (gameTime > 1) {
+            pollutionImages.addAll(generatePollutionImages());
+          }
         });
       }
     });
@@ -135,15 +141,34 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
 
   void showResults() {
     if (mounted) {
+      saveResultToFirestore(context); // Firestore に結果を保存
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              ResultScreen(scorePercentage: (score / maxPollutionImages) * 4.6),
+          builder: (context) => ResultScreen(
+            scorePercentage: (score / maxPollutionImages) * 6.67),
         ),
       );
     }
   }
+
+Future<void> saveResultToFirestore(BuildContext context) async {
+  final firestore = FirebaseFirestore.instance;
+  final username = Provider.of<UserProvider>(context, listen: false).username;
+
+  double scorePercentage = (score / maxPollutionImages) * 6.67;
+
+  try {
+    await firestore.collection('normal').add({
+      'username': username,
+      'score': scorePercentage.toStringAsFixed(1),
+      'timestamp': DateTime.now(),
+    });
+    print("Game result saved to Firestore in 'normal' collection.");
+  } catch (e) {
+    print("Error saving game result to Firestore: $e");
+  }
+}
 
   @override
   void dispose() {
@@ -211,6 +236,29 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
                 ],
               ),
             ),
+
+            // デバッグボタンを追加
+            // Positioned(
+            //   top: 70,
+            //   right: 20,
+            //   child: ElevatedButton(
+            //     onPressed: () {
+            //       setState(() {
+            //         int removedCount = pollutionImages.length; // 消去したばい菌の数を取得
+            //         score += removedCount; // スコアに加算
+            //         pollutionImages.clear(); // すべてのばい菌を消去
+            //       });
+            //     },
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.grey,
+            //     ),
+            //     child: Text(
+            //       "デバッグ: 全消去",
+            //       style: TextStyle(fontSize: 14),
+            //     ),
+            //   ),
+            // ),
+
           ],
         ],
       ),

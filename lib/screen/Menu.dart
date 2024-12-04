@@ -30,7 +30,7 @@ class MenuPageScreens extends StatelessWidget {
   }
 
   void _launchWebPage() async {
-    const url = 'http://localhost/revo/';
+    const url = 'https://pensuke.web.app/';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
