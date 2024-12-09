@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore のインポート
+import 'package:flutter_application_1/screen/Rank.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/user_provider.dart';
 import 'package:flutter_application_1/screen/Rank.dart';
 
 class NormalGameScreen extends StatefulWidget {
@@ -22,6 +26,10 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
   Random random = Random();
   int score = 0;
   int maxPollutionImages = 4;
+  bool debugMode = true; // デバッグモードを有効にするフラグ
+  double debugAreaTopOffset = 100; // 生成エリアの上部オフセット
+  double debugAreaHeight = 300; // 生成エリアの高さ
+  double debugAreaWidth = 300; // 生成エリアの幅
   Timer? countdownTimer;
   Timer? gameTimer;
 
@@ -81,12 +89,14 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
     });
 
     Timer.periodic(Duration(seconds: 2), (timer) {
-      if (gameTime <= 2 || !mounted) {
-        // 終了直前にばい菌生成を停止
+      if (gameTime <= 0 || !mounted) {
         timer.cancel();
       } else {
         setState(() {
-          pollutionImages.addAll(generatePollutionImages());
+          // 残り時間が1秒を切った場合は生成しない
+          if (gameTime > 1) {
+            pollutionImages.addAll(generatePollutionImages());
+          }
         });
       }
     });
@@ -132,16 +142,32 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
 
   void showResults() {
     if (mounted) {
-      // 最大スコア計算
-      int totalImages = maxPollutionImages * (gameTime ~/ 2); // 2秒ごとに生成
-      double scorePercentage = (score / totalImages) * 100;
-
+      saveResultToFirestore(context); // Firestore に結果を保存
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ResultScreen(scorePercentage: scorePercentage),
+          builder: (context) => ResultScreen(
+              scorePercentage: (score / maxPollutionImages) * 6.67),
         ),
       );
+    }
+  }
+
+  Future<void> saveResultToFirestore(BuildContext context) async {
+    final firestore = FirebaseFirestore.instance;
+    final username = Provider.of<UserProvider>(context, listen: false).username;
+
+    double scorePercentage = (score / maxPollutionImages) * 6.67;
+
+    try {
+      await firestore.collection('normal').add({
+        'username': username,
+        'score': scorePercentage.toStringAsFixed(1),
+        'timestamp': DateTime.now(),
+      });
+      print("Game result saved to Firestore in 'normal' collection.");
+    } catch (e) {
+      print("Error saving game result to Firestore: $e");
     }
   }
 
@@ -211,6 +237,7 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
                 ],
               ),
             ),
+
             // デバッグボタンを追加
             // Positioned(
             //   top: 70,

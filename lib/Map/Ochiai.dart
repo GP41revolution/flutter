@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Game/EasyGame.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/user_provider.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserProvider(), // UserProviderを提供
+      child: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -34,14 +43,19 @@ class _OchiaiPageState extends State<OchiaiPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'User01', // ユーザーネームの表示
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-                decorationThickness: 3,
-              ),
+            // ユーザー名をProviderから取得して表示
+            Consumer<UserProvider>(
+              builder: (context, userProvider, child) {
+                return Text(
+                  userProvider.username, // ユーザー名を表示
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                    decorationThickness: 3,
+                  ),
+                );
+              },
             ),
             SizedBox(height: 20),
             Text(

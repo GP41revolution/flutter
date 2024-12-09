@@ -1,7 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore のインポート
+import 'package:flutter_application_1/Game/Game.dart';
 import 'package:flutter_application_1/screen/Rank.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/user_provider.dart';
+
 
 class EasyGameScreen extends StatefulWidget {
   final bool startCountdown;
@@ -21,7 +26,8 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
   List<PollutionImage> pollutionImages = [];
   Random random = Random();
   int score = 0;
-  int maxPollutionImages = 1; // 1秒あたりの最大生成数
+  int maxPollutionImages = 1;
+
   Timer? countdownTimer;
   Timer? gameTimer;
 
@@ -37,13 +43,11 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
     setState(() {
       countdown = 3; // 初期値
     });
-
     countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (!mounted) return; // mounted チェック
+      if (!mounted) return;
       setState(() {
         countdown--;
       });
-
       if (countdown == 0) {
         countdownTimer?.cancel();
         startGame();
@@ -61,18 +65,15 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
     });
 
     final startTime = DateTime.now();
-
-    // ゲームタイマー
     gameTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
       if (!mounted) {
-        timer.cancel(); // ウィジェットが破棄されている場合はタイマーを停止
+        timer.cancel();
         return;
       }
       setState(() {
         final elapsed = DateTime.now().difference(startTime).inMilliseconds;
         final totalTime = gameTime * 1000; // ゲーム時間をミリ秒換算
         progress = 1.0 - (elapsed / totalTime);
-
         if (elapsed >= totalTime) {
           progress = 0.0;
           timer.cancel();
@@ -81,14 +82,15 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
       });
     });
 
-    // ばい菌生成タイマー
     Timer.periodic(Duration(seconds: 1), (timer) {
-      if (!mounted || gameTime <= 1) {
-        // ゲーム時間が1秒以下になったら生成停止
+      if (gameTime <= 0 || !mounted) {
         timer.cancel();
       } else {
         setState(() {
-          pollutionImages.addAll(generatePollutionImages());
+          // 残り時間が1秒を切った場合は生成しない
+          if (gameTime > 1) {
+            pollutionImages.addAll(generatePollutionImages());
+          }
         });
       }
     });
@@ -134,20 +136,34 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
 
   void showResults() {
     if (mounted) {
-      final totalPossiblePollutions =
-          gameTime * maxPollutionImages; // ゲーム中の最大生成数
-      final scorePercentage = (score / totalPossiblePollutions) * 100;
-
+      saveResultToFirestore(context); // Firestore に結果を保存
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ResultScreen(
-            scorePercentage: scorePercentage,
-          ),
+            scorePercentage: (score / maxPollutionImages) * 3.332),
         ),
       );
     }
   }
+
+Future<void> saveResultToFirestore(BuildContext context) async {
+  final firestore = FirebaseFirestore.instance;
+  final username = Provider.of<UserProvider>(context, listen: false).username;
+
+  double scorePercentage = (score / maxPollutionImages) * 3.332;
+
+  try {
+    await firestore.collection('easy').add({
+      'username': username,
+      'score': scorePercentage.toStringAsFixed(1),
+      'timestamp': DateTime.now(),
+    });
+    print("Game result saved to Firestore in 'easy' collection.");
+  } catch (e) {
+    print("Error saving game result to Firestore: $e");
+  }
+}
 
   @override
   void dispose() {
@@ -158,8 +174,6 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
@@ -169,14 +183,19 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
       body: Stack(
         children: [
           if (countdown > 0)
-            Center(child: Text('$countdown', style: TextStyle(fontSize: 50))),
+            Center(
+              child: Text(
+                '$countdown',
+                style: TextStyle(fontSize: 50),
+              ),
+            ),
           if (countdown == 0) ...[
             Positioned(
               top: 20,
               left: 20,
               right: 20,
               child: Container(
-                height: 10, // 元の2倍の高さ
+                height: 10,
                 child: LinearProgressIndicator(value: progress),
               ),
             ),
@@ -215,6 +234,29 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
                 ],
               ),
             ),
+            
+            // デバッグボタンを追加
+            // Positioned(
+            //   top: 70,
+            //   right: 20,
+            //   child: ElevatedButton(
+            //     onPressed: () {
+            //       setState(() {
+            //         int removedCount = pollutionImages.length; // 消去したばい菌の数を取得
+            //         score += removedCount; // スコアに加算
+            //         pollutionImages.clear(); // すべてのばい菌を消去
+            //       });
+            //     },
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.grey,
+            //     ),
+            //     child: Text(
+            //       "デバッグ: 全消去",
+            //       style: TextStyle(fontSize: 14),
+            //     ),
+            //   ),
+            // ),
+
           ],
         ],
       ),
@@ -285,7 +327,6 @@ class _PollutionImageState extends State<PollutionImage>
     } else {
       imagePath = '';
     }
-
     return Positioned(
       top: widget.top,
       left: widget.left,
@@ -384,12 +425,15 @@ class ResultScreen extends StatelessWidget {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                fixedSize: const Size(180, 55),
+                fixedSize: const Size(180, 55), // サイズをランキングボタンと同じに
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
+                backgroundColor:
+                    const Color.fromARGB(255, 195, 213, 237), // 背景色
               ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
               },
-              child: Text('マップ戻る'),
+              child: Text('マップに戻る'),
             ),
           ],
         ),

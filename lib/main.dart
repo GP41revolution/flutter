@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/manual/Start_manual.dart';
 import 'package:flutter_application_1/src/app.dart';
-import 'package:flutter_application_1/manual/Start_manual.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/user_provider.dart';
 
 void main() async {
   final widgetsBinding =
@@ -24,11 +24,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Aqua Guardian',
-      theme: ThemeData(primaryColor: Colors.blue[400]),
-      home: const SplashScreen(),
+    return ChangeNotifierProvider(
+      create: (_) => UserProvider(), // UserProvider を提供
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Aqua Guardian',
+        theme: ThemeData(primaryColor: Colors.blue[400]),
+        home: const SplashScreen(),
+      ),
     );
   }
 }
