@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/Rank.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_application_1/user_provider.dart';
 
 class HardGame extends StatefulWidget {
   final bool startCountdown;
@@ -152,7 +149,6 @@ class _HardGame extends State<HardGame> {
 
   void showResults() {
     if (mounted) {
-      saveResultToFirestore(context); // Firestore に結果を保存
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -162,24 +158,6 @@ class _HardGame extends State<HardGame> {
       );
     }
   }
-
-Future<void> saveResultToFirestore(BuildContext context) async {
-  final firestore = FirebaseFirestore.instance;
-  final username = Provider.of<UserProvider>(context, listen: false).username;
-
-  double scorePercentage = (score / maxPollutionImages) * 3.332;
-
-  try {
-    await firestore.collection('hard').add({
-      'username': username,
-      'score': scorePercentage.toStringAsFixed(1),
-      'timestamp': DateTime.now(),
-    });
-    print("Game result saved to Firestore in 'hard' collection.");
-  } catch (e) {
-    print("Error saving game result to Firestore: $e");
-  }
-}
 
   @override
   void dispose() {
@@ -269,7 +247,6 @@ Future<void> saveResultToFirestore(BuildContext context) async {
             //     ),
             //   ),
             // ),
-
           ],
         ],
       ),
@@ -371,7 +348,7 @@ class LightIcon extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 116, // タップ範囲の幅
+        width: 100, // タップ範囲の幅
         height: 80, // タップ範囲の高さ
         alignment: Alignment.center,
         child: Image.asset(

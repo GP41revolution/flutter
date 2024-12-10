@@ -360,7 +360,7 @@ class LightIcon extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 116, // タップ範囲の幅
+        width: 100, // タップ範囲の幅
         height: 80, // タップ範囲の高さ
         alignment: Alignment.center,
         child: Image.asset(

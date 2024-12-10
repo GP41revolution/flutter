@@ -7,7 +7,6 @@ import 'package:flutter_application_1/screen/Rank.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/user_provider.dart';
 
-
 class EasyGameScreen extends StatefulWidget {
   final bool startCountdown;
 
@@ -141,29 +140,29 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => ResultScreen(
-            scorePercentage: (score / maxPollutionImages) * 3.332),
+              scorePercentage: (score / maxPollutionImages) * 3.332),
         ),
       );
     }
   }
 
-Future<void> saveResultToFirestore(BuildContext context) async {
-  final firestore = FirebaseFirestore.instance;
-  final username = Provider.of<UserProvider>(context, listen: false).username;
+  Future<void> saveResultToFirestore(BuildContext context) async {
+    final firestore = FirebaseFirestore.instance;
+    final username = Provider.of<UserProvider>(context, listen: false).username;
 
-  double scorePercentage = (score / maxPollutionImages) * 3.332;
+    double scorePercentage = (score / maxPollutionImages) * 3.332;
 
-  try {
-    await firestore.collection('easy').add({
-      'username': username,
-      'score': scorePercentage.toStringAsFixed(1),
-      'timestamp': DateTime.now(),
-    });
-    print("Game result saved to Firestore in 'easy' collection.");
-  } catch (e) {
-    print("Error saving game result to Firestore: $e");
+    try {
+      await firestore.collection('easy').add({
+        'username': username,
+        'score': scorePercentage.toStringAsFixed(1),
+        'timestamp': DateTime.now(),
+      });
+      print("Game result saved to Firestore in 'easy' collection.");
+    } catch (e) {
+      print("Error saving game result to Firestore: $e");
+    }
   }
-}
 
   @override
   void dispose() {
@@ -234,7 +233,7 @@ Future<void> saveResultToFirestore(BuildContext context) async {
                 ],
               ),
             ),
-            
+
             // デバッグボタンを追加
             // Positioned(
             //   top: 70,
@@ -256,7 +255,6 @@ Future<void> saveResultToFirestore(BuildContext context) async {
             //     ),
             //   ),
             // ),
-
           ],
         ],
       ),
@@ -357,7 +355,7 @@ class LightIcon extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 116, // タップ範囲の幅
+        width: 100, // タップ範囲の幅
         height: 80, // タップ範囲の高さ
         alignment: Alignment.center,
         child: Image.asset(
@@ -421,7 +419,7 @@ class ResultScreen extends StatelessWidget {
               child: Text('リスタート'),
             ),
             SizedBox(
-              height: 10, //ボタンとの間に空白
+              height: 12, //ボタンとの間に空白
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
