@@ -60,8 +60,8 @@ class MapPageScreens extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    left: 68,
-                    top: 180,
+                    left: 98,
+                    top: 183,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -71,14 +71,14 @@ class MapPageScreens extends StatelessWidget {
                       },
                       child: Image.asset(
                         'assets/Map(1).png', //新宿
-                        width: 155,
-                        height: 150,
+                        width: 103,
+                        height: 140,
                       ),
                     ),
                   ),
                   Positioned(
-                    left: 193,
-                    top: 90,
+                    left: 201,
+                    top: 103,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -88,14 +88,14 @@ class MapPageScreens extends StatelessWidget {
                       },
                       child: Image.asset(
                         'assets/Map(2).png', //神楽坂
-                        width: 167,
-                        height: 135,
+                        width: 130,
+                        height: 116,
                       ),
                     ),
                   ),
                   Positioned(
-                    left: 0,
-                    top: 94,
+                    left: 8,
+                    top: 105,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -106,13 +106,13 @@ class MapPageScreens extends StatelessWidget {
                       child: Image.asset(
                         'assets/Map(3).png', //落合
                         width: 150,
-                        height: 120,
+                        height: 103,
                       ),
                     ),
                   ),
                   Positioned(
-                    left: 104,
-                    top: 119,
+                    left: 110,
+                    top: 122,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -122,14 +122,14 @@ class MapPageScreens extends StatelessWidget {
                       },
                       child: Image.asset(
                         'assets/Map(4).png', //高田馬場
-                        width: 167,
-                        height: 128,
+                        width: 150,
+                        height: 124,
                       ),
                     ),
                   ),
                   Positioned(
-                    left: 189,
-                    top: 204,
+                    left: 183,
+                    top: 203,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -139,8 +139,8 @@ class MapPageScreens extends StatelessWidget {
                       },
                       child: Image.asset(
                         'assets/Map(5).png', //四谷
-                        width: 135,
-                        height: 120,
+                        width: 138,
+                        height: 116,
                       ),
                     ),
                   ),
