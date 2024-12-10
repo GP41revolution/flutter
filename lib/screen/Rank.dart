@@ -195,18 +195,7 @@ class RankList extends StatelessWidget {
                   ),
                 ),
                 child: ListTile(
-                  leading: index == 0
-                      ? Icon(Icons.emoji_events, color: Colors.amber, size: 30)
-                      : CircleAvatar(
-                          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                          child: Text(
-                            "${index + 1}",
-                            style: TextStyle(
-                              fontSize: 20, 
-                              color: const Color.fromARGB(255, 52, 152, 219),
-                            ),
-                          ),
-                        ),
+                  leading: _buildLeadingIcon(index),
                   title: Text(
                     rankData[index]["username"],
                     style: TextStyle(
@@ -215,11 +204,36 @@ class RankList extends StatelessWidget {
                   trailing: Text(
                     "${rankData[index]["score"]}%",
                     style: TextStyle(
-                        color: const Color.fromARGB(255, 52, 152, 219), fontWeight: FontWeight.bold),
+                        fontSize: 15, color: const Color.fromARGB(255, 52, 152, 219), fontWeight: FontWeight.bold),
                   ),
                 ),
               );
             },
           );
+  }
+
+  Widget _buildLeadingIcon(int index) {
+    if (index == 0) {
+      // 金のトロフィー
+      return Icon(Icons.emoji_events, color: Colors.amber, size: 30);
+    } else if (index == 1) {
+      // 銀のトロフィー
+      return Icon(Icons.emoji_events, color: Colors.grey, size: 30);
+    } else if (index == 2) {
+      // 銅のトロフィー
+      return Icon(Icons.emoji_events, color: Colors.brown, size: 30);
+    } else {
+      // 通常の順位アイコン
+      return CircleAvatar(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        child: Text(
+          "${index + 1}",
+          style: TextStyle(
+            fontSize: 20,
+            color: const Color.fromARGB(255, 52, 152, 219),
+          ),
+        ),
+      );
+    }
   }
 }
