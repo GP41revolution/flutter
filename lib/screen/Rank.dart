@@ -189,16 +189,22 @@ class RankList extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(248, 255, 255, 255),
                   borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 52, 152, 219), // 枠線の色を指定
+                    width: 2, // 枠線の太さを指定
+                  ),
                 ),
                 child: ListTile(
                   leading: index == 0
                       ? Icon(Icons.emoji_events, color: Colors.amber, size: 30)
                       : CircleAvatar(
-                          backgroundColor: Colors.white,
+                          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                           child: Text(
                             "${index + 1}",
-                            style:
-                                TextStyle(fontSize: 20, color: const Color.fromARGB(255, 52, 152, 219)),
+                            style: TextStyle(
+                              fontSize: 20, 
+                              color: const Color.fromARGB(255, 52, 152, 219),
+                            ),
                           ),
                         ),
                   title: Text(
