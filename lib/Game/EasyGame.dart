@@ -402,6 +402,9 @@ class ResultScreen extends StatelessWidget {
               },
               child: Text('ランキング'),
             ),
+            SizedBox(
+              height: 10, //ボタンとの間に空白
+            ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(180, 55), // サイズをランキングボタンと同じに

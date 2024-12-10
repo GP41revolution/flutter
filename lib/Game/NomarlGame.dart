@@ -433,7 +433,7 @@ class ResultScreen extends StatelessWidget {
               style: TextButton.styleFrom(
                 fixedSize: const Size(180, 55),
                 foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                backgroundColor: const Color.fromARGB(255, 167, 209, 244),
+                backgroundColor: const Color.fromARGB(255, 195, 213, 237),
               ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
