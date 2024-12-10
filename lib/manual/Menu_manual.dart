@@ -45,7 +45,7 @@ class _IntroPageState extends State<IntroPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('遊び方マニュアル'),
-        backgroundColor: Color.fromARGB(255, 192, 208, 237),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
       ),
       body: Column(
         children: [

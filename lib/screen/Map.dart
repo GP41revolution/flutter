@@ -26,7 +26,7 @@ class MapPageScreens extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('ゲーム'),
-        backgroundColor: Color.fromARGB(255, 192, 208, 237),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
       ),
       body: Stack(
         children: [

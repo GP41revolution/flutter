@@ -21,7 +21,7 @@ class RankPageScreens extends StatefulWidget {
 class _RankPageScreensState extends State<RankPageScreens>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  String headerText = "ランキング";
+  String headerText = "RANKING";
 
   // 各難易度のランキングデータ
   List<Map<String, dynamic>> easyRankData = [];
@@ -41,60 +41,60 @@ class _RankPageScreensState extends State<RankPageScreens>
       setState(() {
         switch (_tabController.index) {
           case 0:
-            headerText = "イージー ランキング";
+            headerText = "EASY RANKING";
             break;
           case 1:
-            headerText = "ノーマル ランキング";
+            headerText = "NORMAL RANKING";
             break;
           case 2:
-            headerText = "ハード ランキング";
+            headerText = "HARD RANKING";
             break;
         }
       });
     });
   }
 
-Future<void> fetchRankData() async {
-  try {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Future<void> fetchRankData() async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    // 各難易度ごとのデータを取得
-    var easySnapshot = await firestore.collection('easy').get();
-    var normalSnapshot = await firestore.collection('normal').get();
-    var hardSnapshot = await firestore.collection('hard').get();
+      // 各難易度ごとのデータを取得
+      var easySnapshot = await firestore.collection('easy').get();
+      var normalSnapshot = await firestore.collection('normal').get();
+      var hardSnapshot = await firestore.collection('hard').get();
 
-    // データをリストに格納
-    setState(() {
-      easyRankData = easySnapshot.docs.map((doc) {
-        return {
-          'username': doc['username'],
-          'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
-        };
-      }).toList();
+      // データをリストに格納
+      setState(() {
+        easyRankData = easySnapshot.docs.map((doc) {
+          return {
+            'username': doc['username'],
+            'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
+          };
+        }).toList();
 
-      normalRankData = normalSnapshot.docs.map((doc) {
-        return {
-          'username': doc['username'],
-          'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
-        };
-      }).toList();
+        normalRankData = normalSnapshot.docs.map((doc) {
+          return {
+            'username': doc['username'],
+            'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
+          };
+        }).toList();
 
-      hardRankData = hardSnapshot.docs.map((doc) {
-        return {
-          'username': doc['username'],
-          'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
-        };
-      }).toList();
+        hardRankData = hardSnapshot.docs.map((doc) {
+          return {
+            'username': doc['username'],
+            'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
+          };
+        }).toList();
 
-      // 各リストをスコア順にソート
-      easyRankData.sort((a, b) => b['score'].compareTo(a['score']));
-      normalRankData.sort((a, b) => b['score'].compareTo(a['score']));
-      hardRankData.sort((a, b) => b['score'].compareTo(a['score']));
-    });
-  } catch (e) {
-    print('Error fetching rank data: $e');
+        // 各リストをスコア順にソート
+        easyRankData.sort((a, b) => b['score'].compareTo(a['score']));
+        normalRankData.sort((a, b) => b['score'].compareTo(a['score']));
+        hardRankData.sort((a, b) => b['score'].compareTo(a['score']));
+      });
+    } catch (e) {
+      print('Error fetching rank data: $e');
+    }
   }
-}
 
   @override
   void dispose() {
@@ -108,8 +108,13 @@ Future<void> fetchRankData() async {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('ランキング一覧 '),
-          backgroundColor: const Color.fromARGB(255, 192, 208, 237),
+          title: Text(
+            'ランキング一覧',
+            style: TextStyle(
+              color: const Color.fromARGB(255, 52, 152, 219), // タイトルのテキストカラーを指定
+            ),
+          ),
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           bottom: TabBar(
             controller: _tabController,
             tabs: [
@@ -117,39 +122,50 @@ Future<void> fetchRankData() async {
               Tab(text: 'ノーマル'),
               Tab(text: 'ハード'),
             ],
+            labelColor: const Color.fromARGB(255, 52, 152, 219), // 選択されたタブのテキストカラー
+            unselectedLabelColor: const Color.fromARGB(255, 52, 152, 219), // 選択されていないタブのテキストカラー
           ),
         ),
-        body: Column(
-          children: [
-            // 大きいランキングヘッダー
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 20.0),
-              color: Colors.orangeAccent,
-              child: Center(
-                child: Text(
-                  headerText,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/rank_back.jpg'), // 背景画像を指定
+              fit: BoxFit.cover, // 画面全体に画像をフィットさせる
+              // colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.2), // 色を黒にして透明度を設定（暗くする効果）
+              // BlendMode.darken, // 画像を暗くする
+              // ),
+            ),
+          ),
+          child: Column(
+            children: [
+              // 大きいランキングヘッダー
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 20.0),
+                child: Center(
+                  child: Text(
+                    headerText,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromARGB(255, 52, 152, 219),
+                    ),
                   ),
                 ),
               ),
-            ),
-            // ランキングリスト
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  RankList(rankData: easyRankData),
-                  RankList(rankData: normalRankData),
-                  RankList(rankData: hardRankData),
-                ],
+              // ランキングリスト
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    RankList(rankData: easyRankData),
+                    RankList(rankData: normalRankData),
+                    RankList(rankData: hardRankData),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        backgroundColor: const Color.fromARGB(255, 218, 219, 211),
       ),
     );
   }
@@ -171,7 +187,7 @@ class RankList extends StatelessWidget {
                 margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                 padding: EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: Colors.deepPurple[200],
+                  color: const Color.fromARGB(248, 255, 255, 255),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: ListTile(
@@ -182,18 +198,18 @@ class RankList extends StatelessWidget {
                           child: Text(
                             "${index + 1}",
                             style:
-                                TextStyle(fontSize: 20, color: Colors.deepPurple),
+                                TextStyle(fontSize: 20, color: const Color.fromARGB(255, 52, 152, 219)),
                           ),
                         ),
                   title: Text(
                     rankData[index]["username"],
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                        color: const Color.fromARGB(255, 52, 152, 219), fontWeight: FontWeight.bold),
                   ),
                   trailing: Text(
                     "${rankData[index]["score"]}%",
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                        color: const Color.fromARGB(255, 52, 152, 219), fontWeight: FontWeight.bold),
                   ),
                 ),
               );
