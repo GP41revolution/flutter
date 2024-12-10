@@ -35,7 +35,7 @@ class _KagurazakaPageState extends State<KagurazakaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('神楽坂エリア'),
+        title: Text('神楽坂エリア',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),),
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
       ),
       body: Center(
