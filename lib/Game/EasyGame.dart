@@ -430,8 +430,7 @@ class ResultScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(180, 55), // サイズをランキングボタンと同じに
                 foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
-                backgroundColor:
-                    const Color.fromARGB(255, 195, 213, 237), // 背景色
+                backgroundColor: const Color.fromARGB(255, 195, 213, 237), // 背景色
               ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
