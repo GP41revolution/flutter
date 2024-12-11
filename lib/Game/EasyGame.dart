@@ -319,11 +319,11 @@ class _PollutionImageState extends State<PollutionImage>
   Widget build(BuildContext context) {
     String imagePath;
     if (widget.color == Colors.red) {
-      imagePath = 'assets/Enemy1.png';
+      imagePath = 'assets/easy_enemy_red.png';
     } else if (widget.color == Colors.blue) {
-      imagePath = 'assets/Enemy2.png';
+      imagePath = 'assets/easy_enemy_blue.png';
     } else if (widget.color == Colors.green) {
-      imagePath = 'assets/Enemy3.png';
+      imagePath = 'assets/easy_enemy_green.png';
     } else {
       imagePath = '';
     }

@@ -131,9 +131,6 @@ class _RankPageScreensState extends State<RankPageScreens>
             image: DecorationImage(
               image: AssetImage('assets/rank_back.jpg'), // 背景画像を指定
               fit: BoxFit.cover, // 画面全体に画像をフィットさせる
-              // colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.2), // 色を黒にして透明度を設定（暗くする効果）
-              // BlendMode.darken, // 画像を暗くする
-              // ),
             ),
           ),
           child: Column(
@@ -142,13 +139,67 @@ class _RankPageScreensState extends State<RankPageScreens>
               Container(
                 padding: EdgeInsets.symmetric(vertical: 20.0),
                 child: Center(
-                  child: Text(
-                    headerText,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(255, 52, 152, 219),
-                    ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // 白い縁取りのテキスト
+                      Text(
+                        headerText,
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white, // 白い縁
+                          shadows: [
+                            Shadow(
+                              blurRadius: 0.0, // 縁取りのためのぼかしを無効に
+                              color: Colors.white, // 白い縁取り
+                              offset: Offset(1, 1), // 縁取りの位置
+                            ),
+                            Shadow(
+                              blurRadius: 0.0,
+                              color: Colors.white,
+                              offset: Offset(-1, -1),
+                            ),
+                            Shadow(
+                              blurRadius: 0.0,
+                              color: Colors.white,
+                              offset: Offset(1, -1),
+                            ),
+                            Shadow(
+                              blurRadius: 0.0,
+                              color: Colors.white,
+                              offset: Offset(-1, 1),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // 元のテキスト
+                      Text(
+                        headerText,
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(255, 20, 144, 226), // 元の色
+                          shadows: [
+                            Shadow(
+                              blurRadius: 20.0,
+                              color: const Color.fromARGB(255, 52, 152, 219).withOpacity(0.8),
+                              offset: Offset(0, 0),
+                            ),
+                            Shadow(
+                              blurRadius: 30.0,
+                              color: const Color.fromARGB(255, 52, 152, 219).withOpacity(0.5),
+                              offset: Offset(0, 0),
+                            ),
+                            Shadow(
+                              blurRadius: 40.0,
+                              color: const Color.fromARGB(255, 52, 152, 219).withOpacity(0.3),
+                              offset: Offset(0, 0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -183,11 +234,35 @@ class RankList extends StatelessWidget {
         : ListView.builder(
             itemCount: rankData.length,
             itemBuilder: (context, index) {
+              // グラデーションの背景を順位に応じて設定
               return Container(
                 margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                 padding: EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(248, 255, 255, 255),
+                  // 順位によって異なるグラデーションを設定
+                  gradient: index == 0
+                      ? LinearGradient(
+                          colors: [Colors.orange, Colors.amber, Colors.orange], // 金色のグラデーション
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : index == 1
+                          ? LinearGradient(
+                              colors: [Colors.grey, Colors.white, Colors.grey], // 銀色のグラデーション
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
+                          : index == 2
+                              ? LinearGradient(
+                                  colors: [Colors.brown, Colors.orange, Colors.brown], // 銅色のグラデーション
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                )
+                              : LinearGradient(
+                                  colors: [Colors.white, Colors.white], // 通常順位の背景
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: const Color.fromARGB(255, 52, 152, 219), // 枠線の色を指定
