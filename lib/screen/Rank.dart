@@ -242,19 +242,19 @@ class RankList extends StatelessWidget {
                   // 順位によって異なるグラデーションを設定
                   gradient: index == 0
                       ? LinearGradient(
-                          colors: [Colors.orange, Colors.amber, Colors.orange], // 金色のグラデーション
+                          colors: [const Color(0xFF6e5101), const Color(0xFF6e5101), Colors.amber, Colors.amber, const Color(0xFF6e5101)],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         )
                       : index == 1
                           ? LinearGradient(
-                              colors: [Colors.grey, Colors.white, Colors.grey], // 銀色のグラデーション
+                              colors: [const Color(0xFF2b4a64), const Color(0xFF2b4a64), const Color(0xFF6993b2), const Color(0xFF6993b2), const Color(0xFF2b4a64)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             )
                           : index == 2
                               ? LinearGradient(
-                                  colors: [Colors.brown, Colors.orange, Colors.brown], // 銅色のグラデーション
+                                  colors: [const Color(0xFF743107), const Color(0xFF743107), Colors.orange, Colors.orange, const Color(0xFF743107)],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                 )
@@ -274,12 +274,21 @@ class RankList extends StatelessWidget {
                   title: Text(
                     rankData[index]["username"],
                     style: TextStyle(
-                        color: const Color.fromARGB(255, 52, 152, 219), fontWeight: FontWeight.bold),
+                      color: index < 3 // 1〜3位の場合は白、それ以外は青
+                          ? Colors.white
+                          : const Color.fromARGB(255, 52, 152, 219),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   trailing: Text(
                     "${rankData[index]["score"]}%",
                     style: TextStyle(
-                        fontSize: 15, color: const Color.fromARGB(255, 52, 152, 219), fontWeight: FontWeight.bold),
+                      fontSize: 15,
+                      color: index < 3 // 1〜3位の場合は白、それ以外は青
+                          ? Colors.white
+                          : const Color.fromARGB(255, 52, 152, 219),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               );
@@ -289,14 +298,26 @@ class RankList extends StatelessWidget {
 
   Widget _buildLeadingIcon(int index) {
     if (index == 0) {
-      // 金のトロフィー
-      return Icon(Icons.emoji_events, color: Colors.amber, size: 30);
+      // 金のトロフィー画像
+      return Image.asset(
+        'assets/gold_medal.png', // 金のトロフィー画像のパス
+        width: 40,
+        height: 40,
+      );
     } else if (index == 1) {
-      // 銀のトロフィー
-      return Icon(Icons.emoji_events, color: Colors.grey, size: 30);
+      // 銀のトロフィー画像
+      return Image.asset(
+        'assets/silver_medal.png', // 銀のトロフィー画像のパス
+        width: 40,
+        height: 40,
+      );
     } else if (index == 2) {
-      // 銅のトロフィー
-      return Icon(Icons.emoji_events, color: Colors.brown, size: 30);
+      // 銅のトロフィー画像
+      return Image.asset(
+        'assets/bronze_medal.png', // 銅のトロフィー画像のパス
+        width: 40,
+        height: 40,
+      );
     } else {
       // 通常の順位アイコン
       return CircleAvatar(
