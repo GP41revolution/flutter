@@ -265,7 +265,9 @@ class RankList extends StatelessWidget {
                                 ),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: const Color.fromARGB(255, 52, 152, 219), // 枠線の色を指定
+                    color: index < 3
+                          ? Colors.black
+                          : const Color.fromARGB(255, 52, 152, 219),
                     width: 2, // 枠線の太さを指定
                   ),
                 ),
@@ -283,7 +285,7 @@ class RankList extends StatelessWidget {
                   trailing: Text(
                     "${rankData[index]["score"]}%",
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 20,
                       color: index < 3 // 1〜3位の場合は白、それ以外は青
                           ? Colors.white
                           : const Color.fromARGB(255, 52, 152, 219),
