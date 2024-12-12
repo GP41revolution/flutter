@@ -248,7 +248,7 @@ class RankList extends StatelessWidget {
                         )
                       : index == 1
                           ? LinearGradient(
-                              colors: [const Color(0xFF2b4a64), const Color(0xFF2b4a64), const Color(0xFF6993b2), const Color(0xFF6993b2), const Color(0xFF2b4a64)],
+                              colors: [const Color(0xFF485763), const Color(0xFF485763), const Color(0xFFAFAFAF), const Color(0xFFAFAFAF), const Color(0xFF485763)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             )
@@ -266,9 +266,9 @@ class RankList extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: index < 3
-                          ? Colors.black
+                          ? const Color.fromARGB(255, 30, 30, 30)
                           : const Color.fromARGB(255, 52, 152, 219),
-                    width: 2, // 枠線の太さを指定
+                    width: 3, // 枠線の太さを指定
                   ),
                 ),
                 child: ListTile(
