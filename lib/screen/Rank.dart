@@ -148,26 +148,26 @@ class _RankPageScreensState extends State<RankPageScreens>
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white, // 白い縁
+                          color: const Color.fromARGB(255, 156, 217, 255), // 白い縁
                           shadows: [
                             Shadow(
                               blurRadius: 0.0, // 縁取りのためのぼかしを無効に
-                              color: Colors.white, // 白い縁取り
+                              color: const Color.fromARGB(255, 156, 217, 255), // 白い縁取り
                               offset: Offset(1, 1), // 縁取りの位置
                             ),
                             Shadow(
                               blurRadius: 0.0,
-                              color: Colors.white,
+                              color: const Color.fromARGB(255, 156, 217, 255),
                               offset: Offset(-1, -1),
                             ),
                             Shadow(
                               blurRadius: 0.0,
-                              color: Colors.white,
+                              color: const Color.fromARGB(255, 156, 217, 255),
                               offset: Offset(1, -1),
                             ),
                             Shadow(
                               blurRadius: 0.0,
-                              color: Colors.white,
+                              color: const Color.fromARGB(255, 156, 217, 255),
                               offset: Offset(-1, 1),
                             ),
                           ],
@@ -268,7 +268,7 @@ class RankList extends StatelessWidget {
                     color: index < 3
                           ? const Color.fromARGB(255, 30, 30, 30)
                           : const Color.fromARGB(255, 52, 152, 219),
-                    width: 3, // 枠線の太さを指定
+                    width: 2, // 枠線の太さを指定
                   ),
                 ),
                 child: ListTile(
