@@ -142,44 +142,12 @@ class _RankPageScreensState extends State<RankPageScreens>
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // 白い縁取りのテキスト
                       Text(
                         headerText,
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: const Color.fromARGB(255, 156, 217, 255), // 白い縁
-                          shadows: [
-                            Shadow(
-                              blurRadius: 0.0, // 縁取りのためのぼかしを無効に
-                              color: const Color.fromARGB(255, 156, 217, 255), // 白い縁取り
-                              offset: Offset(1, 1), // 縁取りの位置
-                            ),
-                            Shadow(
-                              blurRadius: 0.0,
-                              color: const Color.fromARGB(255, 156, 217, 255),
-                              offset: Offset(-1, -1),
-                            ),
-                            Shadow(
-                              blurRadius: 0.0,
-                              color: const Color.fromARGB(255, 156, 217, 255),
-                              offset: Offset(1, -1),
-                            ),
-                            Shadow(
-                              blurRadius: 0.0,
-                              color: const Color.fromARGB(255, 156, 217, 255),
-                              offset: Offset(-1, 1),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // 元のテキスト
-                      Text(
-                        headerText,
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: const Color.fromARGB(255, 20, 144, 226), // 元の色
+                          color: const Color.fromARGB(255, 255, 255, 255),
                           shadows: [
                             Shadow(
                               blurRadius: 20.0,
