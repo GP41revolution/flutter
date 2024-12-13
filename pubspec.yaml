@@ -49,6 +49,15 @@ flutter:
    - assets/Enemy1.png
    - assets/Enemy2.png
    - assets/Enemy3.png
+   - assets/easy_enemy_red.png
+   - assets/easy_enemy_blue.png
+   - assets/easy_enemy_green.png
+   - assets/normal_enemy_red.png
+   - assets/normal_enemy_blue.png
+   - assets/normal_enemy_green.png
+   - assets/hard_enemy_red.png
+   - assets/hard_enemy_blue.png
+   - assets/hard_enemy_green.png
    - assets/Camera_icon.png
    - assets/splash_image.jpg
    - assets/blue-light.png
@@ -60,6 +69,10 @@ flutter:
    - assets/Manual(2).png
    - assets/Manual(3).png
    - assets/logo1.png
+   - assets/rank_back.jpg
+   - assets/gold_medal.png
+   - assets/silver_medal.png
+   - assets/bronze_medal.png
    - assets/Splash_Image(2).png
   
 

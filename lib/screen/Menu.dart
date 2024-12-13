@@ -42,8 +42,8 @@ class MenuPageScreens extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Menu'),
-        backgroundColor: Color.fromARGB(255, 192, 208, 237),
+        title: Text('Menu',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
       ),
       body: ListView(
         children: <Widget>[
@@ -51,7 +51,7 @@ class MenuPageScreens extends StatelessWidget {
             child: ListTile(
               title: Text(
                 'サポート',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Color.fromARGB(255, 52, 152, 219), fontSize: 25, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -61,21 +61,21 @@ class MenuPageScreens extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => IntroPage()));
             },
             child: ListTile(
-              title: Text('遊び方マニュアル'),
+              title: Text('遊び方マニュアル',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),),
               trailing: Icon(Icons.arrow_forward_ios),
             ),
           ),
           InkWell(
             onTap: _launchWebPage,
             child: ListTile(
-              title: Text('ブラウザ版ページ表示'),
+              title: Text('ブラウザ版ページ表示',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),),
               trailing: Icon(Icons.open_in_browser),
             ),
           ),
           InkWell(
             onTap: _launchGoogleForm,
             child: ListTile(
-              title: Text('お問い合わせ (Google Form)'),
+              title: Text('お問い合わせ (Google Form)',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),),
               trailing: Icon(Icons.open_in_browser),
             ),
           ),
@@ -109,7 +109,7 @@ class MenuPageScreens extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Text('AquaGuardian'),
+            child: Text('AquaGuardian',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),),
           ),
         ],
       ),
