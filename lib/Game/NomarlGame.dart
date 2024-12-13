@@ -365,7 +365,7 @@ class LightIcon extends StatelessWidget {
         alignment: Alignment.center,
         child: Image.asset(
           imagePath,
-          width: 110, // 実際のライト画像の幅
+          width: 100, // 実際のライト画像の幅
           height: 50, // 実際のライト画像の高さ
         ),
       ),

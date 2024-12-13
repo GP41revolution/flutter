@@ -353,7 +353,7 @@ class LightIcon extends StatelessWidget {
         alignment: Alignment.center,
         child: Image.asset(
           imagePath,
-          width: 110, // 実際のライト画像の幅
+          width: 100, // 実際のライト画像の幅
           height: 50, // 実際のライト画像の高さ
         ),
       ),
@@ -422,6 +422,9 @@ class ResultScreen extends StatelessWidget {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(180, 55),
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
+                backgroundColor:
+                    const Color.fromARGB(255, 195, 213, 237), // 背景色
               ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
