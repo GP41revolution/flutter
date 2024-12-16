@@ -360,12 +360,12 @@ class LightIcon extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 116, // タップ範囲の幅
+        width: 100, // タップ範囲の幅
         height: 80, // タップ範囲の高さ
         alignment: Alignment.center,
         child: Image.asset(
           imagePath,
-          width: 110, // 実際のライト画像の幅
+          width: 100, // 実際のライト画像の幅
           height: 50, // 実際のライト画像の高さ
         ),
       ),
@@ -433,7 +433,7 @@ class ResultScreen extends StatelessWidget {
               style: TextButton.styleFrom(
                 fixedSize: const Size(180, 55),
                 foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                backgroundColor: const Color.fromARGB(255, 195, 213, 237),
+                backgroundColor: const Color.fromARGB(255, 167, 209, 244),
               ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
