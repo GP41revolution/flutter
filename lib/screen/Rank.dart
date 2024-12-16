@@ -122,8 +122,9 @@ class _RankPageScreensState extends State<RankPageScreens>
               Tab(text: 'ノーマル'),
               Tab(text: 'ハード'),
             ],
-            labelColor: const Color.fromARGB(255, 52, 152, 219), // 選択されたタブのテキストカラー
-            unselectedLabelColor: const Color.fromARGB(255, 52, 152, 219), // 選択されていないタブのテキストカラー
+            labelColor: const Color.fromARGB(255, 52, 152, 219),
+            unselectedLabelColor: const Color.fromARGB(255, 52, 152, 219),
+            indicatorColor: const Color.fromARGB(255, 52, 152, 219),
           ),
         ),
         body: Container(
