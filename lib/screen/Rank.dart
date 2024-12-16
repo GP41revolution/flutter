@@ -199,7 +199,8 @@ class RankList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return rankData.isEmpty
-        ? Center(child: Text("データがありません"))
+        ? Center(
+        child: Text("データがありません",style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))))
         : ListView.builder(
             itemCount: rankData.length,
             itemBuilder: (context, index) {

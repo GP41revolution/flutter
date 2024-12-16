@@ -69,7 +69,7 @@ class _YotsuyaPageState extends State<YotsuyaPage> {
             SizedBox(height: 20),
             Text(
               '$selectedDifficulty 選択中',
-              style: TextStyle(fontSize: 16, color: Colors.black),
+              style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 52, 152, 219)),
             ),
             SizedBox(height: 20),
             Row(
