@@ -39,6 +39,15 @@ class _ShinjukuPageState extends State<ShinjukuPage> {
       appBar: AppBar(
         title: Text('新宿エリア',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),),
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: Color.fromARGB(255, 52, 152, 219),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
       ),
       body: Center(
         child: Column(

@@ -51,6 +51,15 @@ class _IntroPageState extends State<IntroPage> {
         ),
       ),
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: Color.fromARGB(255, 52, 152, 219),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
     ),
       body: Column(
         children: [
