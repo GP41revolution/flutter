@@ -83,8 +83,9 @@ class _YotsuyaPageState extends State<YotsuyaPage> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: selectedDifficulty == 'ノーマル'
-                            ? Colors.blue
+                            ? const Color.fromARGB(255, 52, 152, 219)
                             : Colors.grey,
+                          foregroundColor: Colors.white,
                       ),
                       child: Text('ノーマル'),
                     ),
@@ -103,6 +104,9 @@ class _YotsuyaPageState extends State<YotsuyaPage> {
                             )));
                 print('$selectedDifficulty でゲーム開始');
               },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219),
+              ),
               child: Text('スタート'),
             ),
           ],

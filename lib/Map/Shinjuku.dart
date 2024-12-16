@@ -84,8 +84,9 @@ class _ShinjukuPageState extends State<ShinjukuPage> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: selectedDifficulty == 'ハード'
-                            ? Colors.blue
+                            ? const Color.fromARGB(255, 52, 152, 219)
                             : Colors.grey,
+                          foregroundColor: Colors.white,
                       ),
                       child: Text(' ハード '),
                     ),

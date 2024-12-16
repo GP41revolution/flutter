@@ -83,8 +83,9 @@ class _TakadaPageState extends State<TakadaPage> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: selectedDifficulty == 'ハード'
-                            ? Colors.blue
+                            ? const Color.fromARGB(255, 52, 152, 219)
                             : Colors.grey,
+                          foregroundColor: Colors.white,
                       ),
                       child: Text(' ハード '),
                     ),
@@ -101,6 +102,9 @@ class _TakadaPageState extends State<TakadaPage> {
                         builder: (context) => HardGame(startCountdown: true)));
                 print('$selectedDifficulty でゲーム開始');
               },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219),
+              ),
               child: Text('スタート'),
             ),
           ],

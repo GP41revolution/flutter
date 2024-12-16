@@ -81,8 +81,9 @@ class _KagurazakaPageState extends State<KagurazakaPage> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: selectedDifficulty == 'イージー'
-                            ? Colors.blue
+                            ? const Color.fromARGB(255, 52, 152, 219)
                             : Colors.grey,
+                          foregroundColor: Colors.white,
                       ),
                       child: Text('イージー'),
                     ),
@@ -101,6 +102,9 @@ class _KagurazakaPageState extends State<KagurazakaPage> {
                             )));
                 print('$selectedDifficulty でゲーム開始');
               },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219),
+              ),
               child: Text('スタート'),
             ),
           ],
