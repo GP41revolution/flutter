@@ -44,9 +44,14 @@ class _IntroPageState extends State<IntroPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('遊び方マニュアル'),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      title: Text(
+        '遊び方マニュアル',
+        style: TextStyle(
+          color: const Color.fromARGB(255, 52, 152, 219), // テキストカラーを青に設定
+        ),
       ),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+    ),
       body: Column(
         children: [
           Expanded(

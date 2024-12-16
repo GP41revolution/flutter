@@ -71,25 +71,28 @@ class _YotsuyaPageState extends State<YotsuyaPage> {
                   width: 150,
                   height: 150,
                 ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/normal_enemy_red.png',
+                  width: 50,
+                  height: 50,
+                ),
                 SizedBox(width: 20),
-                Column(
-                  children: [
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedDifficulty = 'ノーマル';
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedDifficulty == 'ノーマル'
-                            ? const Color.fromARGB(255, 52, 152, 219)
-                            : Colors.grey,
-                          foregroundColor: Colors.white,
-                      ),
-                      child: Text('ノーマル'),
-                    ),
-                  ],
+                Image.asset(
+                  'assets/normal_enemy_blue.png',
+                  width: 50,
+                  height: 50,
+                ),
+                SizedBox(width: 20),
+                Image.asset(
+                  'assets/normal_enemy_green.png',
+                  width: 50,
+                  height: 50,
                 ),
               ],
             ),

@@ -70,24 +70,28 @@ class _KagurazakaPageState extends State<KagurazakaPage> {
                   width: 150,
                   height: 150,
                 ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/easy_enemy_red.png',
+                  width: 50,
+                  height: 50,
+                ),
                 SizedBox(width: 20),
-                Column(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedDifficulty = 'イージー';
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedDifficulty == 'イージー'
-                            ? const Color.fromARGB(255, 52, 152, 219)
-                            : Colors.grey,
-                          foregroundColor: Colors.white,
-                      ),
-                      child: Text('イージー'),
-                    ),
-                  ],
+                Image.asset(
+                  'assets/easy_enemy_blue.png',
+                  width: 50,
+                  height: 50,
+                ),
+                SizedBox(width: 20),
+                Image.asset(
+                  'assets/easy_enemy_green.png',
+                  width: 50,
+                  height: 50,
                 ),
               ],
             ),

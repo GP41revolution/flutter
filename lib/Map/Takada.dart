@@ -71,25 +71,28 @@ class _TakadaPageState extends State<TakadaPage> {
                   width: 150,
                   height: 150,
                 ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/hard_enemy_red.png',
+                  width: 50,
+                  height: 50,
+                ),
                 SizedBox(width: 20),
-                Column(
-                  children: [
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedDifficulty = 'ハード';
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedDifficulty == 'ハード'
-                            ? const Color.fromARGB(255, 52, 152, 219)
-                            : Colors.grey,
-                          foregroundColor: Colors.white,
-                      ),
-                      child: Text(' ハード '),
-                    ),
-                  ],
+                Image.asset(
+                  'assets/hard_enemy_blue.png',
+                  width: 50,
+                  height: 50,
+                ),
+                SizedBox(width: 20),
+                Image.asset(
+                  'assets/hard_enemy_green.png',
+                  width: 50,
+                  height: 50,
                 ),
               ],
             ),
