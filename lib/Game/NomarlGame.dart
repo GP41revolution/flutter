@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore のインポ
 import 'package:flutter_application_1/screen/Rank.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/user_provider.dart';
+import 'package:flutter_application_1/screen/Rank.dart';
 
 class NormalGameScreen extends StatefulWidget {
   final bool startCountdown;
@@ -146,29 +147,29 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => ResultScreen(
-            scorePercentage: (score / maxPollutionImages) * 6.67),
+              scorePercentage: (score / maxPollutionImages) * 6.67),
         ),
       );
     }
   }
 
-Future<void> saveResultToFirestore(BuildContext context) async {
-  final firestore = FirebaseFirestore.instance;
-  final username = Provider.of<UserProvider>(context, listen: false).username;
+  Future<void> saveResultToFirestore(BuildContext context) async {
+    final firestore = FirebaseFirestore.instance;
+    final username = Provider.of<UserProvider>(context, listen: false).username;
 
-  double scorePercentage = (score / maxPollutionImages) * 6.67;
+    double scorePercentage = (score / maxPollutionImages) * 6.67;
 
-  try {
-    await firestore.collection('normal').add({
-      'username': username,
-      'score': scorePercentage.toStringAsFixed(1),
-      'timestamp': DateTime.now(),
-    });
-    print("Game result saved to Firestore in 'normal' collection.");
-  } catch (e) {
-    print("Error saving game result to Firestore: $e");
+    try {
+      await firestore.collection('normal').add({
+        'username': username,
+        'score': scorePercentage.toStringAsFixed(1),
+        'timestamp': DateTime.now(),
+      });
+      print("Game result saved to Firestore in 'normal' collection.");
+    } catch (e) {
+      print("Error saving game result to Firestore: $e");
+    }
   }
-}
 
   @override
   void dispose() {
@@ -258,7 +259,6 @@ Future<void> saveResultToFirestore(BuildContext context) async {
             //     ),
             //   ),
             // ),
-
           ],
         ],
       ),
@@ -266,7 +266,7 @@ Future<void> saveResultToFirestore(BuildContext context) async {
   }
 }
 
-class PollutionImage extends StatelessWidget {
+class PollutionImage extends StatefulWidget {
   final Color color;
   final VoidCallback onRemove;
   final double top;
@@ -281,27 +281,67 @@ class PollutionImage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _PollutionImageState createState() => _PollutionImageState();
+}
+
+class _PollutionImageState extends State<PollutionImage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // アニメーションコントローラを初期化
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1), // 1秒でフェードイン
+    );
+
+    // 不透明度アニメーションの設定
+    _opacityAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeIn,
+      ),
+    );
+
+    // アニメーション開始
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String imagePath;
-    if (color == Colors.red) {
-      imagePath = 'assets/Enemy1.png';
-    } else if (color == Colors.blue) {
-      imagePath = 'assets/Enemy2.png';
-    } else if (color == Colors.green) {
-      imagePath = 'assets/Enemy3.png';
+    if (widget.color == Colors.red) {
+      imagePath = 'assets/normal_enemy_red.png';
+    } else if (widget.color == Colors.blue) {
+      imagePath = 'assets/normal_enemy_blue.png';
+    } else if (widget.color == Colors.green) {
+      imagePath = 'assets/normal_enemy_green.png';
     } else {
       imagePath = '';
     }
 
     return Positioned(
-      top: top,
-      left: left,
+      top: widget.top,
+      left: widget.left,
       child: GestureDetector(
-        onTap: onRemove,
-        child: Image.asset(
-          imagePath,
-          width: 50,
-          height: 50,
+        onTap: widget.onRemove,
+        child: FadeTransition(
+          opacity: _opacityAnimation,
+          child: Image.asset(
+            imagePath,
+            width: 50,
+            height: 50,
+          ),
         ),
       ),
     );
@@ -319,10 +359,15 @@ class LightIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Image.asset(
-        imagePath,
-        width: 50,
-        height: 50,
+      child: Container(
+        width: 100, // タップ範囲の幅
+        height: 80, // タップ範囲の高さ
+        alignment: Alignment.center,
+        child: Image.asset(
+          imagePath,
+          width: 100, // 実際のライト画像の幅
+          height: 50, // 実際のライト画像の高さ
+        ),
       ),
     );
   }
@@ -361,7 +406,7 @@ class ResultScreen extends StatelessWidget {
               child: Text('ランキング'),
             ),
             SizedBox(
-              height: 10, //ボタンとの間に空白
+              height: 10,
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -369,6 +414,26 @@ class ResultScreen extends StatelessWidget {
                 foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
                 backgroundColor:
                     const Color.fromARGB(255, 195, 213, 237), // 背景色
+              ),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        NormalGameScreen(startCountdown: true), //ゲームをリスタートします
+                  ),
+                );
+              },
+              child: Text('リスタート'),
+            ),
+            SizedBox(
+              height: 10, //ボタンとの間に空白
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                fixedSize: const Size(180, 55),
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                backgroundColor: const Color.fromARGB(255, 167, 209, 244),
               ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);

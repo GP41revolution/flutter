@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/Rank.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_application_1/user_provider.dart';
 
 class HardGame extends StatefulWidget {
   final bool startCountdown;
@@ -152,7 +149,6 @@ class _HardGame extends State<HardGame> {
 
   void showResults() {
     if (mounted) {
-      saveResultToFirestore(context); // Firestore に結果を保存
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -162,24 +158,6 @@ class _HardGame extends State<HardGame> {
       );
     }
   }
-
-Future<void> saveResultToFirestore(BuildContext context) async {
-  final firestore = FirebaseFirestore.instance;
-  final username = Provider.of<UserProvider>(context, listen: false).username;
-
-  double scorePercentage = (score / maxPollutionImages) * 3.332;
-
-  try {
-    await firestore.collection('hard').add({
-      'username': username,
-      'score': scorePercentage.toStringAsFixed(1),
-      'timestamp': DateTime.now(),
-    });
-    print("Game result saved to Firestore in 'hard' collection.");
-  } catch (e) {
-    print("Error saving game result to Firestore: $e");
-  }
-}
 
   @override
   void dispose() {
@@ -249,27 +227,26 @@ Future<void> saveResultToFirestore(BuildContext context) async {
             ),
 
             // デバッグボタンを追加
-            // Positioned(
-            //   top: 70,
-            //   right: 20,
-            //   child: ElevatedButton(
-            //     onPressed: () {
-            //       setState(() {
-            //         int removedCount = pollutionImages.length; // 消去したばい菌の数を取得
-            //         score += removedCount; // スコアに加算
-            //         pollutionImages.clear(); // すべてのばい菌を消去
-            //       });
-            //     },
-            //     style: ElevatedButton.styleFrom(
-            //       backgroundColor: Colors.grey,
-            //     ),
-            //     child: Text(
-            //       "デバッグ: 全消去",
-            //       style: TextStyle(fontSize: 14),
-            //     ),
-            //   ),
-            // ),
-
+            // // Positioned(
+            // //   top: 70,
+            // //   right: 20,
+            // //   child: ElevatedButton(
+            // //     onPressed: () {
+            // //       setState(() {
+            // //         int removedCount = pollutionImages.length; // 消去したばい菌の数を取得
+            // //         score += removedCount; // スコアに加算
+            // //         pollutionImages.clear(); // すべてのばい菌を消去
+            // //       });
+            // //     },
+            // //     style: ElevatedButton.styleFrom(
+            // //       backgroundColor: Colors.grey,
+            // //     ),
+            // //     child: Text(
+            // //       "デバッグ: 全消去",
+            // //       style: TextStyle(fontSize: 14),
+            // //     ),
+            // //   ),
+            // // ),
           ],
         ],
       ),
@@ -277,7 +254,7 @@ Future<void> saveResultToFirestore(BuildContext context) async {
   }
 }
 
-class PollutionImage extends StatelessWidget {
+class PollutionImage extends StatefulWidget {
   final Color color;
   final VoidCallback onRemove;
   final double top;
@@ -292,27 +269,67 @@ class PollutionImage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _PollutionImageState createState() => _PollutionImageState();
+}
+
+class _PollutionImageState extends State<PollutionImage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // アニメーションコントローラを初期化
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1), // 1秒でフェードイン
+    );
+
+    // 不透明度アニメーションの設定
+    _opacityAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeIn,
+      ),
+    );
+
+    // アニメーション開始
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String imagePath;
-    if (color == Colors.red) {
-      imagePath = 'assets/Enemy1.png';
-    } else if (color == Colors.blue) {
-      imagePath = 'assets/Enemy2.png';
-    } else if (color == Colors.green) {
-      imagePath = 'assets/Enemy3.png';
+    if (widget.color == Colors.red) {
+      imagePath = 'assets/hard_enemy_red.png';
+    } else if (widget.color == Colors.blue) {
+      imagePath = 'assets/hard_enemy_blue.png';
+    } else if (widget.color == Colors.green) {
+      imagePath = 'assets/hard_enemy_green.png';
     } else {
       imagePath = '';
     }
 
     return Positioned(
-      top: top,
-      left: left,
+      top: widget.top,
+      left: widget.left,
       child: GestureDetector(
-        onTap: onRemove,
-        child: Image.asset(
-          imagePath,
-          width: 50,
-          height: 50,
+        onTap: widget.onRemove,
+        child: FadeTransition(
+          opacity: _opacityAnimation,
+          child: Image.asset(
+            imagePath,
+            width: 50,
+            height: 50,
+          ),
         ),
       ),
     );
@@ -330,10 +347,15 @@ class LightIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Image.asset(
-        imagePath,
-        width: 50,
-        height: 50,
+      child: Container(
+        width: 100, // タップ範囲の幅
+        height: 80, // タップ範囲の高さ
+        alignment: Alignment.center,
+        child: Image.asset(
+          imagePath,
+          width: 100, // 実際のライト画像の幅
+          height: 50, // 実際のライト画像の高さ
+        ),
       ),
     );
   }
@@ -344,6 +366,8 @@ class ResultScreen extends StatelessWidget {
 
   const ResultScreen({Key? key, required this.scorePercentage})
       : super(key: key);
+
+  get webViewController => null;
 
   @override
   Widget build(BuildContext context) {
@@ -382,9 +406,30 @@ class ResultScreen extends StatelessWidget {
                     const Color.fromARGB(255, 195, 213, 237), // 背景色
               ),
               onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        HardGame(startCountdown: true), //ゲームをリスタートします
+                  ),
+                );
+              },
+              child: Text('リスタート'),
+            ),
+            SizedBox(
+              height: 10, //ボタンとの間に空白
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(180, 55),
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
+                backgroundColor:
+                    const Color.fromARGB(255, 195, 213, 237), // 背景色
+              ),
+              onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
               },
-              child: Text('マップに戻る'),
+              child: Text('マップ戻る'),
             ),
           ],
         ),

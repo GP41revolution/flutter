@@ -114,7 +114,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             fit: BoxFit.cover,
                           )
                         : Image.asset(
-                            'assets/Enemy3.png',
+                            'assets/logo1.png',
                             width: 200,
                             height: 200,
                             fit: BoxFit.contain,
@@ -243,20 +243,29 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.emoji_events), label: 'ランキング'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.sports_esports), label: 'ゲーム'),
-          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'メニュー'),
-        ],
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color.fromARGB(255, 192, 208, 237),
-      ),
-    );
+    body: _screens[_selectedIndex],
+    bottomNavigationBar: BottomNavigationBar(
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.emoji_events),
+          label: 'ランキング',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.sports_esports),
+          label: 'ゲーム',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.menu),
+          label: 'メニュー',
+        ),
+      ],
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      selectedItemColor: const Color.fromARGB(255, 52, 152, 219), // 選択されたアイテムの色
+      unselectedItemColor: const Color.fromARGB(255, 52, 152, 219), // 選択されていないアイテムの色
+    ),
+  );
   }
 }

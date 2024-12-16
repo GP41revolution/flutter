@@ -16,7 +16,7 @@ dependencies:
   package_info_plus: ^8.0.3
   url_launcher: ^6.3.1
   image_picker: ^1.1.2
-  flutter_native_splash: ^2.4.2
+  flutter_native_splash: ^2.4.3
   get: ^4.6.6
   hive_flutter: ^1.1.0
   introduction_screen: ^3.1.14
@@ -28,6 +28,8 @@ dependencies:
   firebase_database: ^11.0.1
   shared_preferences: ^2.3.3
   provider: ^6.0.0
+  flutter_svg: ^2.0.16
+  flutter_animate: ^4.5.2
 
 dev_dependencies:
   flutter_test:
@@ -47,6 +49,15 @@ flutter:
    - assets/Enemy1.png
    - assets/Enemy2.png
    - assets/Enemy3.png
+   - assets/easy_enemy_red.png
+   - assets/easy_enemy_blue.png
+   - assets/easy_enemy_green.png
+   - assets/normal_enemy_red.png
+   - assets/normal_enemy_blue.png
+   - assets/normal_enemy_green.png
+   - assets/hard_enemy_red.png
+   - assets/hard_enemy_blue.png
+   - assets/hard_enemy_green.png
    - assets/Camera_icon.png
    - assets/splash_image.jpg
    - assets/blue-light.png
@@ -57,12 +68,19 @@ flutter:
    - assets/Manual(1).png
    - assets/Manual(2).png
    - assets/Manual(3).png
+   - assets/logo1.png
+   - assets/rank_back.jpg
+   - assets/gold_medal.png
+   - assets/silver_medal.png
+   - assets/bronze_medal.png
+   - assets/Splash_Image(2).png
+  
 
    
   #スプラッシュ画面の設定
 flutter_native_splash:
   color: "#42a5f5"
-  image: assets/Splash_Image1.jpg
+  image: assets/Splash_Image(2).png
   android: true
   ios: true
   web: true
