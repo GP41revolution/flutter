@@ -240,26 +240,26 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
             ),
 
             // デバッグボタンを追加
-            Positioned(
-              top: 70,
-              right: 20,
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    int removedCount = pollutionImages.length; // 消去したばい菌の数を取得
-                    score += removedCount; // スコアに加算
-                    pollutionImages.clear(); // すべてのばい菌を消去
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                ),
-                child: Text(
-                  "デバッグ: 全消去",
-                  style: TextStyle(fontSize: 14),
-                ),
-              ),
-            ),
+            // Positioned(
+            //   top: 70,
+            //   right: 20,
+            //   child: ElevatedButton(
+            //     onPressed: () {
+            //       setState(() {
+            //         int removedCount = pollutionImages.length; // 消去したばい菌の数を取得
+            //         score += removedCount; // スコアに加算
+            //         pollutionImages.clear(); // すべてのばい菌を消去
+            //       });
+            //     },
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.grey,
+            //     ),
+            //     child: Text(
+            //       "デバッグ: 全消去",
+            //       style: TextStyle(fontSize: 14),
+            //     ),
+            //   ),
+            // ),
           ],
         ],
       ),
