@@ -7,8 +7,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: RankPageScreens(),
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          iconTheme: IconThemeData(color: Color.fromARGB(255, 52, 152, 219)),
+          foregroundColor: Color.fromARGB(255, 52, 152, 219),
+        ),
+      ),
     );
   }
 }
@@ -113,6 +117,9 @@ class _RankPageScreensState extends State<RankPageScreens>
             style: TextStyle(
               color: const Color.fromARGB(255, 52, 152, 219), // タイトルのテキストカラーを指定
             ),
+          ),
+          iconTheme: IconThemeData(
+            color: Color.fromARGB(255, 52, 152, 219), // 矢印を青に設定
           ),
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           bottom: TabBar(
