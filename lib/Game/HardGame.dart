@@ -186,7 +186,7 @@ class _HardGame extends State<HardGame> {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text("ゲーム画面", style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))),
-        backgroundColor: Color.fromARGB(25, 52, 152, 219),
+        backgroundColor: Color.fromARGB(255, 239, 245, 253),
         automaticallyImplyLeading: false,
       ),
       body: Stack(
@@ -200,7 +200,11 @@ class _HardGame extends State<HardGame> {
               right: 20,
               child: Container(
                 height: 10, // 元の2倍の高さ
-                child: LinearProgressIndicator(value: progress),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 52, 152, 219)),
+                  backgroundColor: Color.fromARGB(255, 239, 245, 253),
+                  ),
               ),
             ),
             Stack(children: pollutionImages.cast<Widget>()),
