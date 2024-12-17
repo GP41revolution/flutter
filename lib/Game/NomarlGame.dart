@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore のインポ
 import 'package:flutter_application_1/screen/Rank.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/user_provider.dart';
-import 'package:flutter_application_1/screen/Rank.dart';
 
 class NormalGameScreen extends StatefulWidget {
   final bool startCountdown;

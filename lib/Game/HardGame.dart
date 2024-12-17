@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore のインポート
 import 'package:flutter_application_1/screen/Rank.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/user_provider.dart';
 
 class HardGame extends StatefulWidget {
   final bool startCountdown;
@@ -140,15 +143,9 @@ class _HardGame extends State<HardGame> {
     }
   }
 
-  // static final FirebaseFirestore db = FirebaseFirestore.instance;
-  // static final CollectionReference User01 = db.collection('User01');
-
-  // void addScoreData() async {
-  //   await User01.add({'Easy': 'score'});
-  // }
-
   void showResults() {
     if (mounted) {
+      saveResultToFirestore(context);
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -156,6 +153,24 @@ class _HardGame extends State<HardGame> {
               scorePercentage: (score / maxPollutionImages) * 3.332),
         ),
       );
+    }
+  }
+
+    Future<void> saveResultToFirestore(BuildContext context) async {
+    final firestore = FirebaseFirestore.instance;
+    final username = Provider.of<UserProvider>(context, listen: false).username;
+
+    double scorePercentage = (score / maxPollutionImages) * 6.67;
+
+    try {
+      await firestore.collection('hard').add({
+        'username': username,
+        'score': scorePercentage.toStringAsFixed(1),
+        'timestamp': DateTime.now(),
+      });
+      print("Game result saved to Firestore in 'hard' collection.");
+    } catch (e) {
+      print("Error saving game result to Firestore: $e");
     }
   }
 
