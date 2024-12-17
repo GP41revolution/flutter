@@ -116,8 +116,13 @@ class _YotsuyaPageState extends State<YotsuyaPage> {
                             )));
                 print('$selectedDifficulty でゲーム開始');
               },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: const Color.fromARGB(255, 52, 152, 219),
+              style: TextButton.styleFrom(
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219), // テキストを青に
+                backgroundColor: Colors.white, // 背景を白に
+                side: BorderSide(color: Color.fromARGB(255, 52, 152, 219), width: 2), // 枠線を青に
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20), // 角を丸くする
+                ),
               ),
               child: Text('スタート'),
             ),
