@@ -179,18 +179,14 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text("ゲーム画面"),
+        title: Text("ゲーム画面", style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))),
         automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: [
           if (countdown > 0)
             Center(
-              child: Text(
-                '$countdown',
-                style: TextStyle(fontSize: 50),
-              ),
-            ),
+              child: Text('$countdown', style: TextStyle(fontSize: 50, color: Color.fromARGB(255, 52, 152, 219)))),
           if (countdown == 0) ...[
             Positioned(
               top: 20,
@@ -381,7 +377,7 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("結果"),
+        title: Text("結果", style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))),
         automaticallyImplyLeading: false,
       ),
       body: Center(
@@ -389,7 +385,7 @@ class ResultScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
-                style: TextStyle(fontSize: 30)),
+                style: TextStyle(fontSize: 30, color: Color.fromARGB(255, 52, 152, 219))),
             SizedBox(height: 20),
             TextButton(
               style: TextButton.styleFrom(

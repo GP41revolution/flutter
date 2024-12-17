@@ -36,10 +36,7 @@ class _OchiaiPageState extends State<OchiaiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-      title: Text(
-        '落合エリア',
-        style: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),
-      ),
+      title: Text('落合エリア', style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       leading: IconButton(
         icon: Icon(

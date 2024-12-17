@@ -36,7 +36,7 @@ class _YotsuyaPageState extends State<YotsuyaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('四谷エリア',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),),
+        title: Text('四谷エリア',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))),
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
         leading: IconButton(
         icon: Icon(
