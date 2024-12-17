@@ -21,7 +21,7 @@ class RankPageScreens extends StatefulWidget {
 class _RankPageScreensState extends State<RankPageScreens>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  String headerText = "RANKING";
+  String headerText = "EASY RANKING";
 
   // 各難易度のランキングデータ
   List<Map<String, dynamic>> easyRankData = [];
