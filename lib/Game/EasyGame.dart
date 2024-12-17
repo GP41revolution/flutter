@@ -180,6 +180,7 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text("ゲーム画面", style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))),
+        backgroundColor: Color.fromARGB(25, 52, 152, 219),
         automaticallyImplyLeading: false,
       ),
       body: Stack(
