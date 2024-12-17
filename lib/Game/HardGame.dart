@@ -17,6 +17,7 @@ class HardGame extends StatefulWidget {
 class _HardGame extends State<HardGame> {
   int countdown = 3;
   int gameTime = 30;
+  int enemytimer = 30;
   double progress = 1.0;
   Color backgroundColor = Colors.white;
   String selectedLight = '';
@@ -77,7 +78,6 @@ class _HardGame extends State<HardGame> {
         final elapsed = DateTime.now().difference(startTime).inMilliseconds;
         final totalTime = gameTime * 1000; // ゲーム時間をミリ秒換算
         progress = 1.0 - (elapsed / totalTime);
-
         if (elapsed >= totalTime) {
           progress = 0.0;
           timer.cancel();
@@ -87,21 +87,18 @@ class _HardGame extends State<HardGame> {
     });
 
     Timer.periodic(Duration(seconds: 1), (timer) {
-      if (gameTime <= 0 || !mounted) {
+      if (!mounted) {
         timer.cancel();
-      } else {
+        return;
+      }
+      if (enemytimer > 3) {
         setState(() {
-          // 残り時間が1秒を切った場合は生成しない
-          if (gameTime > 1) {
-            pollutionImages.addAll(generatePollutionImages());
-          }
+          pollutionImages.addAll(generatePollutionImages());
         });
       }
-
-      if (gameTime <= 0) {
-        timer.cancel();
-        showResults();
-      }
+      setState(() {
+        enemytimer--; // 残り時間を1秒ごとに減らす
+      });
     });
   }
 
@@ -150,7 +147,7 @@ class _HardGame extends State<HardGame> {
         context,
         MaterialPageRoute(
           builder: (context) => ResultScreen(
-              scorePercentage: (score / maxPollutionImages) * 3.332),
+              scorePercentage: (score / maxPollutionImages) * 3.571),
         ),
       );
     }
@@ -160,7 +157,7 @@ class _HardGame extends State<HardGame> {
     final firestore = FirebaseFirestore.instance;
     final username = Provider.of<UserProvider>(context, listen: false).username;
 
-    double scorePercentage = (score / maxPollutionImages) * 6.67;
+    double scorePercentage = (score / maxPollutionImages) * 3.571;
 
     try {
       await firestore.collection('hard').add({

@@ -18,13 +18,14 @@ class NormalGameScreen extends StatefulWidget {
 class _NormalGameScreenState extends State<NormalGameScreen> {
   int countdown = 3;
   int gameTime = 30;
+  int enemytimer = 30;
   double progress = 1.0;
   Color backgroundColor = Colors.white;
   String selectedLight = '';
   List<PollutionImage> pollutionImages = [];
   Random random = Random();
   int score = 0;
-  int maxPollutionImages = 4;
+  int maxPollutionImages = 2;
   bool debugMode = true; // デバッグモードを有効にするフラグ
   double debugAreaTopOffset = 100; // 生成エリアの上部オフセット
   double debugAreaHeight = 300; // 生成エリアの高さ
@@ -78,7 +79,6 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
         final elapsed = DateTime.now().difference(startTime).inMilliseconds;
         final totalTime = gameTime * 1000; // ゲーム時間をミリ秒換算
         progress = 1.0 - (elapsed / totalTime);
-
         if (elapsed >= totalTime) {
           progress = 0.0;
           timer.cancel();
@@ -87,17 +87,19 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
       });
     });
 
-    Timer.periodic(Duration(seconds: 2), (timer) {
-      if (gameTime <= 0 || !mounted) {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      if (!mounted) {
         timer.cancel();
-      } else {
+        return;
+      }
+      if (enemytimer > 3) {
         setState(() {
-          // 残り時間が1秒を切った場合は生成しない
-          if (gameTime > 1) {
-            pollutionImages.addAll(generatePollutionImages());
-          }
+          pollutionImages.addAll(generatePollutionImages());
         });
       }
+      setState(() {
+        enemytimer--; // 残り時間を1秒ごとに減らす
+      });
     });
   }
 
@@ -146,7 +148,7 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => ResultScreen(
-              scorePercentage: (score / maxPollutionImages) * 6.67),
+              scorePercentage: (score / maxPollutionImages) * 3.571),
         ),
       );
     }
@@ -156,7 +158,7 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
     final firestore = FirebaseFirestore.instance;
     final username = Provider.of<UserProvider>(context, listen: false).username;
 
-    double scorePercentage = (score / maxPollutionImages) * 6.67;
+    double scorePercentage = (score / maxPollutionImages) * 3.571;
 
     try {
       await firestore.collection('normal').add({

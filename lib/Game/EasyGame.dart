@@ -19,6 +19,7 @@ class EasyGameScreen extends StatefulWidget {
 class _EasyGameScreenState extends State<EasyGameScreen> {
   int countdown = 3;
   int gameTime = 30;
+  int enemytimer = 30;
   double progress = 1.0;
   Color backgroundColor = Colors.white;
   String selectedLight = '';
@@ -82,16 +83,18 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
     });
 
     Timer.periodic(Duration(seconds: 1), (timer) {
-      if (gameTime <= 0 || !mounted) {
+      if (!mounted) {
         timer.cancel();
-      } else {
+        return;
+      }
+      if (enemytimer > 3) {
         setState(() {
-          // 残り時間が1秒を切った場合は生成しない
-          if (gameTime > 1) {
-            pollutionImages.addAll(generatePollutionImages());
-          }
+          pollutionImages.addAll(generatePollutionImages());
         });
       }
+      setState(() {
+        enemytimer--; // 残り時間を1秒ごとに減らす
+      });
     });
   }
 
@@ -140,7 +143,7 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => ResultScreen(
-              scorePercentage: (score / maxPollutionImages) * 3.332),
+              scorePercentage: (score / maxPollutionImages) * 3.571),
         ),
       );
     }
@@ -150,7 +153,7 @@ class _EasyGameScreenState extends State<EasyGameScreen> {
     final firestore = FirebaseFirestore.instance;
     final username = Provider.of<UserProvider>(context, listen: false).username;
 
-    double scorePercentage = (score / maxPollutionImages) * 3.332;
+    double scorePercentage = (score / maxPollutionImages) * 3.571;
 
     try {
       await firestore.collection('easy').add({
