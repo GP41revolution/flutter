@@ -397,8 +397,12 @@ class ResultScreen extends StatelessWidget {
             TextButton(
               style: TextButton.styleFrom(
                 fixedSize: const Size(180, 55),
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                backgroundColor: const Color.fromARGB(255, 167, 209, 244),
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219), // テキストを青に
+                backgroundColor: Colors.white, // 背景を白に
+                side: BorderSide(color: Color.fromARGB(255, 52, 152, 219), width: 2), // 枠線を青に
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20), // 角を丸くする
+                ),
               ),
               onPressed: () {
                 Navigator.push(context,
@@ -410,11 +414,14 @@ class ResultScreen extends StatelessWidget {
               height: 10,
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(180, 55), // サイズをランキングボタンと同じに
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
-                backgroundColor:
-                    const Color.fromARGB(255, 195, 213, 237), // 背景色
+              style: TextButton.styleFrom(
+                fixedSize: const Size(180, 55),
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219), // テキストを青に
+                backgroundColor: Colors.white, // 背景を白に
+                side: BorderSide(color: Color.fromARGB(255, 52, 152, 219), width: 2), // 枠線を青に
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20), // 角を丸くする
+                ),
               ),
               onPressed: () {
                 Navigator.pushReplacement(
@@ -433,8 +440,12 @@ class ResultScreen extends StatelessWidget {
             TextButton(
               style: TextButton.styleFrom(
                 fixedSize: const Size(180, 55),
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                backgroundColor: const Color.fromARGB(255, 167, 209, 244),
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219), // テキストを青に
+                backgroundColor: Colors.white, // 背景を白に
+                side: BorderSide(color: Color.fromARGB(255, 52, 152, 219), width: 2), // 枠線を青に
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20), // 角を丸くする
+                ),
               ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
