@@ -45,7 +45,7 @@ class MapPageScreens extends StatelessWidget {
           Center(
             child: SizedBox(
               width: 380,
-              height: 500,
+              height: 400,
               child: Stack(
                 children: [
                   Container(
@@ -70,7 +70,7 @@ class MapPageScreens extends StatelessWidget {
                   ),
                   Positioned(
                     left: 79,
-                    top: 275,
+                    top: 225,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -87,7 +87,7 @@ class MapPageScreens extends StatelessWidget {
                   ),
                   Positioned(
                     left: 236.5,
-                    top: 168,
+                    top: 118,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -104,7 +104,7 @@ class MapPageScreens extends StatelessWidget {
                   ),
                   Positioned(
                     left: -9,
-                    top: 149,
+                    top: 99,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -121,7 +121,7 @@ class MapPageScreens extends StatelessWidget {
                   ),
                   Positioned(
                     left: 116,
-                    top: 182,
+                    top: 132,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -138,7 +138,7 @@ class MapPageScreens extends StatelessWidget {
                   ),
                   Positioned(
                     left: 205,
-                    top: 284.5,
+                    top: 234.5,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(

@@ -64,7 +64,6 @@ flutter:
    - assets/red-light.png
    - assets/green-light.png
    - assets/CreateImage.jpg
-   - assets/Splash_Image1.jpg
    - assets/Manual(1).png
    - assets/Manual(2).png
    - assets/Manual(3).png
@@ -74,6 +73,7 @@ flutter:
    - assets/gold_medal.png
    - assets/silver_medal.png
    - assets/bronze_medal.png
+   - assets/splash_image.png
    - assets/Splash_Image(2).png
   
 
@@ -81,7 +81,7 @@ flutter:
   #スプラッシュ画面の設定
 flutter_native_splash:
   color: "#42a5f5"
-  image: assets/Splash_Image(2).png
+  image: assets/splash_image.png
   android: true
   ios: true
   web: true

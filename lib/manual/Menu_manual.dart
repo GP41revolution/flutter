@@ -76,7 +76,7 @@ class _IntroPageState extends State<IntroPage> {
                   title: 'このアプリについて',
                   description: 'このゲームは除菌を行い、得点を挙げていくゲームです。',
                   color: Colors.blue,
-                  imagePath: 'assets/splash_image.jpg',
+                  imagePath: 'assets/splash_image.png',
                 ),
                 _buildPage(
                   title: '遊び方その１',
