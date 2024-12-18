@@ -42,7 +42,7 @@ class MenuPageScreens extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Menu',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),),
+        title: Text('メニュー',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),),
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
       ),
       body: ListView(

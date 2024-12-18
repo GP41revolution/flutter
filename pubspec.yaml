@@ -77,7 +77,7 @@ flutter:
    
   #スプラッシュ画面の設定
 flutter_native_splash:
-  color: "#42a5f5"
+  color: "#ffffff"
   image: assets/splash_image.png
   android: true
   ios: true
