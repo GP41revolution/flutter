@@ -103,7 +103,7 @@ class MapPageScreens extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    left: -9,
+                    left: -8,
                     top: 99,
                     child: GestureDetector(
                       onTap: () {
