@@ -74,6 +74,8 @@ flutter:
    - assets/silver_medal.png
    - assets/bronze_medal.png
    - assets/splash_image.png
+   - assets/Offensive.txt
+   - assets/Sexual.txt
    
   #スプラッシュ画面の設定
 flutter_native_splash:

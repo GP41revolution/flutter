@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'dart:io'; // File操作のためにインポート
+import 'package:flutter/services.dart'; // Asset読み込みのためにインポート
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/Map.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => UserProvider(), // UserProviderの提供
+      create: (_) => UserProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Aqua Guardian',
@@ -40,10 +41,37 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   String username = "";
   String welcomeMessage = "Aqua Guardian";
-  File? _image; // 選択した画像ファイルを格納
-  bool _showWarning = false; // 警告表示の状態
-
+  File? _image;
+  bool _showWarning = false;
+  String warningMessage = "";
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  List<String> bannedWords = []; // 禁止ワードリスト
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterNativeSplash.remove();
+    _loadBannedWords(); // 初期化時に禁止ワードを読み込む
+  }
+
+  // 複数の禁止ワードファイルからワードを読み込む
+  Future<void> _loadBannedWords() async {
+    try {
+      // 複数のファイル名を指定
+      List<String> fileNames = ["Sexual.txt", "Offensive.txt"];
+
+      for (String fileName in fileNames) {
+        String fileContent =
+            await rootBundle.loadString('assets/$fileName'); // アセットから読み込む
+        List<String> words = fileContent.split('\n'); // 改行で区切る
+        bannedWords.addAll(words.map((word) => word.trim())); // トリムして追加
+      }
+      print("禁止ワード読み込み完了: ${bannedWords.length}件");
+    } catch (e) {
+      print("禁止ワードの読み込み中にエラーが発生しました: $e");
+    }
+  }
 
   // Firestoreにユーザー名が存在するか確認
   Future<bool> _checkUserExists(String username) async {
@@ -83,6 +111,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       });
     }
   }
+
+  // ユーザーネームに禁止ワードが含まれているかをチェック
+  bool _containsBannedWords(String input) {
+    for (final word in bannedWords) {
+      // 完全一致する禁止ワードを検出する
+      if (input.toLowerCase() == word.toLowerCase()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -132,18 +172,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: TextField(
-                  cursorColor: Color.fromARGB(255, 52, 152, 219),
+                  cursorColor: const Color.fromARGB(255, 52, 152, 219),
                   decoration: InputDecoration(
                     labelText: 'Username',
-                    labelStyle: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),
-                    border: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 52, 152, 219)),
+                    labelStyle:
+                        const TextStyle(color: Color.fromARGB(255, 52, 152, 219)),
+                    border: const UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 52, 152, 219)),
                     ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 52, 152, 219)),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 52, 152, 219)),
                     ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 52, 152, 219)),
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 52, 152, 219)),
                     ),
                   ),
                   onChanged: (value) {
@@ -152,20 +196,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
               ),
               if (_showWarning)
-                const Padding(
-                  padding: EdgeInsets.only(top: 10),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
                   child: Text(
-                    'ユーザーネームを8文字以内で入力してください',
-                    style: TextStyle(color: Colors.red, fontSize: 14),
+                    warningMessage,
+                    style: const TextStyle(color: Colors.red, fontSize: 14),
                   ),
                 ),
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () async {
                   if (username.isNotEmpty) {
-                    if (username.length > 8) {  // ユーザーネームが8文字を超えている場合
+                    if (username.length > 8) {
                       setState(() {
-                        _showWarning = true;  // 警告表示
+                        _showWarning = true;
+                        warningMessage = "ユーザーネームを8文字以内で入力してください";
+                      });
+                    } else if (_containsBannedWords(username)) {
+                      setState(() {
+                        _showWarning = true;
+                        warningMessage = "不適切な単語が含まれています。";
                       });
                     } else {
                       final userExists = await _checkUserExists(username);
@@ -174,8 +224,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           welcomeMessage = "おかえりなさい、$username!";
                           _showWarning = false;
                         });
-                        // UserProviderでusernameを更新
-                        Provider.of<UserProvider>(context, listen: false).setUsername(username);
+                        Provider.of<UserProvider>(context, listen: false)
+                            .setUsername(username);
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -188,8 +238,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           welcomeMessage = "ようこそ、$username!";
                           _showWarning = false;
                         });
-                        // UserProviderでusernameを更新
-                        Provider.of<UserProvider>(context, listen: false).setUsername(username);
+                        Provider.of<UserProvider>(context, listen: false)
+                            .setUsername(username);
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -201,6 +251,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   } else {
                     setState(() {
                       _showWarning = true;
+                      warningMessage = "ユーザーネームを入力してください";
                     });
                   }
                 },
@@ -210,10 +261,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 ),
-                child: Text(
+                child: const Text(
                   '次へ',
                   style: TextStyle(
-                    color: Color.fromARGB(255, 52, 152, 219), // ボタンテキストの色
+                    color: Color.fromARGB(255, 52, 152, 219),
                   ),
                 ),
               ),
@@ -227,12 +278,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    FlutterNativeSplash.remove();
   }
 }
 
