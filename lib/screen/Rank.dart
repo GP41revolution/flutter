@@ -72,28 +72,70 @@ class _RankPageScreensState extends State<RankPageScreens>
         easyRankData = easySnapshot.docs.map((doc) {
           return {
             'username': doc['username'],
-            'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
+            'score': double.tryParse(doc['score'].toString()) ?? 0.0,
+            'timestamp': doc['timestamp'],
           };
         }).toList();
 
         normalRankData = normalSnapshot.docs.map((doc) {
           return {
             'username': doc['username'],
-            'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
+            'score': double.tryParse(doc['score'].toString()) ?? 0.0,
+            'timestamp': doc['timestamp'],
           };
         }).toList();
 
         hardRankData = hardSnapshot.docs.map((doc) {
           return {
             'username': doc['username'],
-            'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
+            'score': double.tryParse(doc['score'].toString()) ?? 0.0,
+            'timestamp': doc['timestamp'],
           };
         }).toList();
 
-        // 各リストをスコア順にソート
-        easyRankData.sort((a, b) => b['score'].compareTo(a['score']));
-        normalRankData.sort((a, b) => b['score'].compareTo(a['score']));
-        hardRankData.sort((a, b) => b['score'].compareTo(a['score']));
+        // 各リストをスコア順にソート（同点の場合はタイムスタンプ順）
+        easyRankData.sort((a, b) {
+          if (b['score'] != a['score']) {
+            return b['score'].compareTo(a['score']);
+          } else {
+            // タイムスタンプで比較
+            Timestamp? aTimestamp = a['timestamp'];
+            Timestamp? bTimestamp = b['timestamp'];
+            if (aTimestamp != null && bTimestamp != null) {
+              return bTimestamp.compareTo(aTimestamp); // 新しい順
+            } else {
+              return 0; // タイムスタンプがない場合は順序を変えない
+            }
+          }
+        });
+
+        normalRankData.sort((a, b) {
+          if (b['score'] != a['score']) {
+            return b['score'].compareTo(a['score']);
+          } else {
+            Timestamp? aTimestamp = a['timestamp'];
+            Timestamp? bTimestamp = b['timestamp'];
+            if (aTimestamp != null && bTimestamp != null) {
+              return bTimestamp.compareTo(aTimestamp);
+            } else {
+              return 0;
+            }
+          }
+        });
+
+        hardRankData.sort((a, b) {
+          if (b['score'] != a['score']) {
+            return b['score'].compareTo(a['score']);
+          } else {
+            Timestamp? aTimestamp = a['timestamp'];
+            Timestamp? bTimestamp = b['timestamp'];
+            if (aTimestamp != null && bTimestamp != null) {
+              return bTimestamp.compareTo(aTimestamp);
+            } else {
+              return 0;
+            }
+          }
+        });
       });
     } catch (e) {
       print('Error fetching rank data: $e');
@@ -250,14 +292,28 @@ class RankList extends StatelessWidget {
                 ),
                 child: ListTile(
                   leading: _buildLeadingIcon(index),
-                  title: Text(
-                    rankData[index]["username"],
-                    style: TextStyle(
-                      color: index < 3 // 1〜3位の場合は白、それ以外は青
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        rankData[index]["username"],
+                        style: TextStyle(
+                        color: index < 3 // 1〜3位の場合は白、それ以外は青
                           ? Colors.white
                           : const Color.fromARGB(255, 52, 152, 219),
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      // デバッグ用のタイムスタンプを表示するもの
+                      // SizedBox(height: 5),
+                      // Text(
+                      //   "Timestamp: ${rankData[index]["timestamp"].toString()}",
+                      //   style: TextStyle(
+                      //     color: const Color.fromARGB(255, 0, 0, 0),
+                      //     fontSize: 12,
+                      //   ),
+                      // ),
+                    ],
                   ),
                   trailing: Text(
                     "${rankData[index]["score"]}%",
