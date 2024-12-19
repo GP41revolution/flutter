@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore のインポート
 import 'package:flutter_application_1/screen/Rank.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/user_provider.dart';
 
 class HardGame extends StatefulWidget {
   final bool startCountdown;
@@ -14,6 +17,7 @@ class HardGame extends StatefulWidget {
 class _HardGame extends State<HardGame> {
   int countdown = 3;
   int gameTime = 30;
+  int enemytimer = 30;
   double progress = 1.0;
   Color backgroundColor = Colors.white;
   String selectedLight = '';
@@ -74,7 +78,6 @@ class _HardGame extends State<HardGame> {
         final elapsed = DateTime.now().difference(startTime).inMilliseconds;
         final totalTime = gameTime * 1000; // ゲーム時間をミリ秒換算
         progress = 1.0 - (elapsed / totalTime);
-
         if (elapsed >= totalTime) {
           progress = 0.0;
           timer.cancel();
@@ -84,21 +87,18 @@ class _HardGame extends State<HardGame> {
     });
 
     Timer.periodic(Duration(seconds: 1), (timer) {
-      if (gameTime <= 0 || !mounted) {
+      if (!mounted) {
         timer.cancel();
-      } else {
+        return;
+      }
+      if (enemytimer > 3) {
         setState(() {
-          // 残り時間が1秒を切った場合は生成しない
-          if (gameTime > 1) {
-            pollutionImages.addAll(generatePollutionImages());
-          }
+          pollutionImages.addAll(generatePollutionImages());
         });
       }
-
-      if (gameTime <= 0) {
-        timer.cancel();
-        showResults();
-      }
+      setState(() {
+        enemytimer--; // 残り時間を1秒ごとに減らす
+      });
     });
   }
 
@@ -140,22 +140,34 @@ class _HardGame extends State<HardGame> {
     }
   }
 
-  // static final FirebaseFirestore db = FirebaseFirestore.instance;
-  // static final CollectionReference User01 = db.collection('User01');
-
-  // void addScoreData() async {
-  //   await User01.add({'Easy': 'score'});
-  // }
-
   void showResults() {
     if (mounted) {
+      saveResultToFirestore(context);
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ResultScreen(
-              scorePercentage: (score / maxPollutionImages) * 3.332),
+              scorePercentage: (score / maxPollutionImages) * 3.571),
         ),
       );
+    }
+  }
+
+    Future<void> saveResultToFirestore(BuildContext context) async {
+    final firestore = FirebaseFirestore.instance;
+    final username = Provider.of<UserProvider>(context, listen: false).username;
+
+    double scorePercentage = (score / maxPollutionImages) * 3.571;
+
+    try {
+      await firestore.collection('hard').add({
+        'username': username,
+        'score': scorePercentage.toStringAsFixed(1),
+        'timestamp': DateTime.now(),
+      });
+      print("Game result saved to Firestore in 'hard' collection.");
+    } catch (e) {
+      print("Error saving game result to Firestore: $e");
     }
   }
 
@@ -173,13 +185,14 @@ class _HardGame extends State<HardGame> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text("ゲーム画面"),
+        title: Text("ゲーム画面", style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))),
+        backgroundColor: Color.fromARGB(255, 239, 245, 253),
         automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: [
           if (countdown > 0)
-            Center(child: Text('$countdown', style: TextStyle(fontSize: 50))),
+            Center(child: Text('$countdown', style: TextStyle(fontSize: 50, color: Color.fromARGB(255, 52, 152, 219)))),
           if (countdown == 0) ...[
             Positioned(
               top: 20,
@@ -187,7 +200,11 @@ class _HardGame extends State<HardGame> {
               right: 20,
               child: Container(
                 height: 10, // 元の2倍の高さ
-                child: LinearProgressIndicator(value: progress),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 52, 152, 219)),
+                  backgroundColor: Color.fromARGB(255, 239, 245, 253),
+                  ),
               ),
             ),
             Stack(children: pollutionImages.cast<Widget>()),
@@ -227,26 +244,26 @@ class _HardGame extends State<HardGame> {
             ),
 
             // デバッグボタンを追加
-            // // Positioned(
-            // //   top: 70,
-            // //   right: 20,
-            // //   child: ElevatedButton(
-            // //     onPressed: () {
-            // //       setState(() {
-            // //         int removedCount = pollutionImages.length; // 消去したばい菌の数を取得
-            // //         score += removedCount; // スコアに加算
-            // //         pollutionImages.clear(); // すべてのばい菌を消去
-            // //       });
-            // //     },
-            // //     style: ElevatedButton.styleFrom(
-            // //       backgroundColor: Colors.grey,
-            // //     ),
-            // //     child: Text(
-            // //       "デバッグ: 全消去",
-            // //       style: TextStyle(fontSize: 14),
-            // //     ),
-            // //   ),
-            // // ),
+            // Positioned(
+            //   top: 70,
+            //   right: 20,
+            //   child: ElevatedButton(
+            //     onPressed: () {
+            //       setState(() {
+            //         int removedCount = pollutionImages.length; // 消去したばい菌の数を取得
+            //         score += removedCount; // スコアに加算
+            //         pollutionImages.clear(); // すべてのばい菌を消去
+            //       });
+            //     },
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.grey,
+            //     ),
+            //     child: Text(
+            //       "デバッグ: 全消去",
+            //       style: TextStyle(fontSize: 14),
+            //     ),
+            //   ),
+            // ),
           ],
         ],
       ),
@@ -373,7 +390,7 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("結果"),
+        title: Text("結果", style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))),
         automaticallyImplyLeading: false,
       ),
       body: Center(
@@ -381,13 +398,17 @@ class ResultScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
-                style: TextStyle(fontSize: 30)),
+                style: TextStyle(fontSize: 30, color: Color.fromARGB(255, 52, 152, 219))),
             SizedBox(height: 20),
             TextButton(
               style: TextButton.styleFrom(
                 fixedSize: const Size(180, 55),
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                backgroundColor: const Color.fromARGB(255, 167, 209, 244),
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219), // テキストを青に
+                backgroundColor: Colors.white, // 背景を白に
+                side: BorderSide(color: Color.fromARGB(255, 52, 152, 219), width: 2), // 枠線を青に
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20), // 角を丸くする
+                ),
               ),
               onPressed: () {
                 Navigator.push(context,
@@ -399,11 +420,14 @@ class ResultScreen extends StatelessWidget {
               height: 10, //ボタンとの間に空白
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(180, 55), // サイズをランキングボタンと同じに
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
-                backgroundColor:
-                    const Color.fromARGB(255, 195, 213, 237), // 背景色
+              style: TextButton.styleFrom(
+                fixedSize: const Size(180, 55),
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219), // テキストを青に
+                backgroundColor: Colors.white, // 背景を白に
+                side: BorderSide(color: Color.fromARGB(255, 52, 152, 219), width: 2), // 枠線を青に
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20), // 角を丸くする
+                ),
               ),
               onPressed: () {
                 Navigator.pushReplacement(
@@ -420,11 +444,14 @@ class ResultScreen extends StatelessWidget {
               height: 10, //ボタンとの間に空白
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
+              style: TextButton.styleFrom(
                 fixedSize: const Size(180, 55),
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
-                backgroundColor:
-                    const Color.fromARGB(255, 195, 213, 237), // 背景色
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219), // テキストを青に
+                backgroundColor: Colors.white, // 背景を白に
+                side: BorderSide(color: Color.fromARGB(255, 52, 152, 219), width: 2), // 枠線を青に
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20), // 角を丸くする
+                ),
               ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);

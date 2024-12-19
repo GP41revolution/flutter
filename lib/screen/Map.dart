@@ -37,7 +37,7 @@ class MapPageScreens extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/splash_image.jpg'), // 背景画像のパス
+                image: AssetImage('assets/map_back.png'), // 背景画像のパス
                 fit: BoxFit.cover,
               ),
             ),
@@ -45,23 +45,32 @@ class MapPageScreens extends StatelessWidget {
           Center(
             child: SizedBox(
               width: 380,
-              height: 388,
+              height: 500,
               child: Stack(
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 164, 252, 255),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.blue),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: Color.fromARGB(255, 52, 152, 219),
+                        width: 2,
+                      ),
                     ),
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     child: Text(
                       '新宿区',
-                      style: TextStyle(fontSize: 44),
+                      style: TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 52, 152, 219),
+                        letterSpacing: 1.5,
+                      ),
                     ),
                   ),
                   Positioned(
-                    left: 98,
-                    top: 183,
+                    left: 80,
+                    top: 198,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -71,14 +80,14 @@ class MapPageScreens extends StatelessWidget {
                       },
                       child: Image.asset(
                         'assets/Map(1).png', //新宿
-                        width: 103,
-                        height: 140,
+                        width: 168,
+                        height: 168,
                       ),
                     ),
                   ),
                   Positioned(
-                    left: 201,
-                    top: 103,
+                    left: 237,
+                    top: 92,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -88,14 +97,14 @@ class MapPageScreens extends StatelessWidget {
                       },
                       child: Image.asset(
                         'assets/Map(2).png', //神楽坂
-                        width: 130,
-                        height: 116,
+                        width: 150,
+                        height: 150,
                       ),
                     ),
                   ),
                   Positioned(
-                    left: 8,
-                    top: 105,
+                    left: -8,
+                    top: 72,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -105,14 +114,14 @@ class MapPageScreens extends StatelessWidget {
                       },
                       child: Image.asset(
                         'assets/Map(3).png', //落合
-                        width: 150,
-                        height: 103,
+                        width: 183,
+                        height: 183,
                       ),
                     ),
                   ),
                   Positioned(
-                    left: 110,
-                    top: 122,
+                    left: 116,
+                    top: 106,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -122,14 +131,14 @@ class MapPageScreens extends StatelessWidget {
                       },
                       child: Image.asset(
                         'assets/Map(4).png', //高田馬場
-                        width: 150,
-                        height: 124,
+                        width: 186,
+                        height: 186,
                       ),
                     ),
                   ),
                   Positioned(
-                    left: 183,
-                    top: 203,
+                    left: 204,
+                    top: 207,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -139,8 +148,8 @@ class MapPageScreens extends StatelessWidget {
                       },
                       child: Image.asset(
                         'assets/Map(5).png', //四谷
-                        width: 138,
-                        height: 116,
+                        width: 177,
+                        height: 177,
                       ),
                     ),
                   ),

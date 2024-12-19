@@ -39,7 +39,7 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   String username = "";
-  String welcomeMessage = "ようこそ! Aqua Guardianへ!";
+  String welcomeMessage = "Aqua Guardian";
   File? _image; // 選択した画像ファイルを格納
   bool _showWarning = false; // 警告表示の状態
 
@@ -132,9 +132,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: TextField(
-                  decoration: const InputDecoration(
+                  cursorColor: Color.fromARGB(255, 52, 152, 219),
+                  decoration: InputDecoration(
                     labelText: 'Username',
-                    border: UnderlineInputBorder(),
+                    labelStyle: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color.fromARGB(255, 52, 152, 219)),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color.fromARGB(255, 52, 152, 219)),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color.fromARGB(255, 52, 152, 219)),
+                    ),
                   ),
                   onChanged: (value) {
                     username = value.trim();
@@ -145,7 +155,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 const Padding(
                   padding: EdgeInsets.only(top: 10),
                   child: Text(
-                    'ユーザーネームを入力してください',
+                    'ユーザーネームを8文字以内で入力してください',
                     style: TextStyle(color: Colors.red, fontSize: 14),
                   ),
                 ),
@@ -153,36 +163,40 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ElevatedButton(
                 onPressed: () async {
                   if (username.isNotEmpty) {
-                    final userExists = await _checkUserExists(username);
-                    if (userExists) {
+                    if (username.length > 8) {  // ユーザーネームが8文字を超えている場合
                       setState(() {
-                        welcomeMessage = "おかえりなさい、$username!";
-                        _showWarning = false;
+                        _showWarning = true;  // 警告表示
                       });
-                      // UserProviderでusernameを更新
-                      Provider.of<UserProvider>(context, listen: false)
-                          .setUsername(username);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MyStatefulWidget(),
-                        ),
-                      );
                     } else {
-                      await _saveUserToFirestore(username);
-                      setState(() {
-                        welcomeMessage = "ようこそ、$username!";
-                        _showWarning = false;
-                      });
-                      // UserProviderでusernameを更新
-                      Provider.of<UserProvider>(context, listen: false)
-                          .setUsername(username);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MyStatefulWidget(),
-                        ),
-                      );
+                      final userExists = await _checkUserExists(username);
+                      if (userExists) {
+                        setState(() {
+                          welcomeMessage = "おかえりなさい、$username!";
+                          _showWarning = false;
+                        });
+                        // UserProviderでusernameを更新
+                        Provider.of<UserProvider>(context, listen: false).setUsername(username);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyStatefulWidget(),
+                          ),
+                        );
+                      } else {
+                        await _saveUserToFirestore(username);
+                        setState(() {
+                          welcomeMessage = "ようこそ、$username!";
+                          _showWarning = false;
+                        });
+                        // UserProviderでusernameを更新
+                        Provider.of<UserProvider>(context, listen: false).setUsername(username);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyStatefulWidget(),
+                          ),
+                        );
+                      }
                     }
                   } else {
                     setState(() {
@@ -194,10 +208,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 ),
-                child: const Text('次へ'),
+                child: Text(
+                  '次へ',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 52, 152, 219), // ボタンテキストの色
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               const Text(
@@ -243,29 +261,29 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    body: _screens[_selectedIndex],
-    bottomNavigationBar: BottomNavigationBar(
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.emoji_events),
-          label: 'ランキング',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.sports_esports),
-          label: 'ゲーム',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.menu),
-          label: 'メニュー',
-        ),
-      ],
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      selectedItemColor: const Color.fromARGB(255, 52, 152, 219), // 選択されたアイテムの色
-      unselectedItemColor: const Color.fromARGB(255, 52, 152, 219), // 選択されていないアイテムの色
-    ),
-  );
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.emoji_events),
+            label: 'ランキング',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sports_esports),
+            label: 'ゲーム',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu),
+            label: 'メニュー',
+          ),
+        ],
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        selectedItemColor: const Color.fromARGB(255, 52, 152, 219), // 選択されたアイテムの色
+        unselectedItemColor: const Color.fromARGB(255, 52, 152, 219), // 選択されていないアイテムの色
+      ),
+    );
   }
 }

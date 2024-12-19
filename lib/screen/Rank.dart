@@ -7,8 +7,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: RankPageScreens(),
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          iconTheme: IconThemeData(color: Color.fromARGB(255, 52, 152, 219)),
+          foregroundColor: Color.fromARGB(255, 52, 152, 219),
+        ),
+      ),
     );
   }
 }
@@ -21,7 +25,7 @@ class RankPageScreens extends StatefulWidget {
 class _RankPageScreensState extends State<RankPageScreens>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  String headerText = "RANKING";
+  String headerText = "EASY RANKING";
 
   // 各難易度のランキングデータ
   List<Map<String, dynamic>> easyRankData = [];
@@ -68,28 +72,70 @@ class _RankPageScreensState extends State<RankPageScreens>
         easyRankData = easySnapshot.docs.map((doc) {
           return {
             'username': doc['username'],
-            'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
+            'score': double.tryParse(doc['score'].toString()) ?? 0.0,
+            'timestamp': doc['timestamp'],
           };
         }).toList();
 
         normalRankData = normalSnapshot.docs.map((doc) {
           return {
             'username': doc['username'],
-            'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
+            'score': double.tryParse(doc['score'].toString()) ?? 0.0,
+            'timestamp': doc['timestamp'],
           };
         }).toList();
 
         hardRankData = hardSnapshot.docs.map((doc) {
           return {
             'username': doc['username'],
-            'score': double.tryParse(doc['score'].toString()) ?? 0.0, // 数値に変換
+            'score': double.tryParse(doc['score'].toString()) ?? 0.0,
+            'timestamp': doc['timestamp'],
           };
         }).toList();
 
-        // 各リストをスコア順にソート
-        easyRankData.sort((a, b) => b['score'].compareTo(a['score']));
-        normalRankData.sort((a, b) => b['score'].compareTo(a['score']));
-        hardRankData.sort((a, b) => b['score'].compareTo(a['score']));
+        // 各リストをスコア順にソート（同点の場合はタイムスタンプ順）
+        easyRankData.sort((a, b) {
+          if (b['score'] != a['score']) {
+            return b['score'].compareTo(a['score']);
+          } else {
+            // タイムスタンプで比較
+            Timestamp? aTimestamp = a['timestamp'];
+            Timestamp? bTimestamp = b['timestamp'];
+            if (aTimestamp != null && bTimestamp != null) {
+              return bTimestamp.compareTo(aTimestamp); // 新しい順
+            } else {
+              return 0; // タイムスタンプがない場合は順序を変えない
+            }
+          }
+        });
+
+        normalRankData.sort((a, b) {
+          if (b['score'] != a['score']) {
+            return b['score'].compareTo(a['score']);
+          } else {
+            Timestamp? aTimestamp = a['timestamp'];
+            Timestamp? bTimestamp = b['timestamp'];
+            if (aTimestamp != null && bTimestamp != null) {
+              return bTimestamp.compareTo(aTimestamp);
+            } else {
+              return 0;
+            }
+          }
+        });
+
+        hardRankData.sort((a, b) {
+          if (b['score'] != a['score']) {
+            return b['score'].compareTo(a['score']);
+          } else {
+            Timestamp? aTimestamp = a['timestamp'];
+            Timestamp? bTimestamp = b['timestamp'];
+            if (aTimestamp != null && bTimestamp != null) {
+              return bTimestamp.compareTo(aTimestamp);
+            } else {
+              return 0;
+            }
+          }
+        });
       });
     } catch (e) {
       print('Error fetching rank data: $e');
@@ -114,6 +160,9 @@ class _RankPageScreensState extends State<RankPageScreens>
               color: const Color.fromARGB(255, 52, 152, 219), // タイトルのテキストカラーを指定
             ),
           ),
+          iconTheme: IconThemeData(
+            color: Color.fromARGB(255, 52, 152, 219), // 矢印を青に設定
+          ),
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           bottom: TabBar(
             controller: _tabController,
@@ -122,8 +171,9 @@ class _RankPageScreensState extends State<RankPageScreens>
               Tab(text: 'ノーマル'),
               Tab(text: 'ハード'),
             ],
-            labelColor: const Color.fromARGB(255, 52, 152, 219), // 選択されたタブのテキストカラー
-            unselectedLabelColor: const Color.fromARGB(255, 52, 152, 219), // 選択されていないタブのテキストカラー
+            labelColor: const Color.fromARGB(255, 52, 152, 219),
+            unselectedLabelColor: const Color.fromARGB(255, 52, 152, 219),
+            indicatorColor: const Color.fromARGB(255, 52, 152, 219),
           ),
         ),
         body: Container(
@@ -142,44 +192,12 @@ class _RankPageScreensState extends State<RankPageScreens>
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // 白い縁取りのテキスト
                       Text(
                         headerText,
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white, // 白い縁
-                          shadows: [
-                            Shadow(
-                              blurRadius: 0.0, // 縁取りのためのぼかしを無効に
-                              color: Colors.white, // 白い縁取り
-                              offset: Offset(1, 1), // 縁取りの位置
-                            ),
-                            Shadow(
-                              blurRadius: 0.0,
-                              color: Colors.white,
-                              offset: Offset(-1, -1),
-                            ),
-                            Shadow(
-                              blurRadius: 0.0,
-                              color: Colors.white,
-                              offset: Offset(1, -1),
-                            ),
-                            Shadow(
-                              blurRadius: 0.0,
-                              color: Colors.white,
-                              offset: Offset(-1, 1),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // 元のテキスト
-                      Text(
-                        headerText,
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: const Color.fromARGB(255, 20, 144, 226), // 元の色
+                          color: const Color.fromARGB(255, 255, 255, 255),
                           shadows: [
                             Shadow(
                               blurRadius: 20.0,
@@ -230,7 +248,8 @@ class RankList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return rankData.isEmpty
-        ? Center(child: Text("データがありません"))
+        ? Center(
+        child: Text("データがありません",style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))))
         : ListView.builder(
             itemCount: rankData.length,
             itemBuilder: (context, index) {
@@ -248,7 +267,7 @@ class RankList extends StatelessWidget {
                         )
                       : index == 1
                           ? LinearGradient(
-                              colors: [const Color(0xFF2b4a64), const Color(0xFF2b4a64), const Color(0xFF6993b2), const Color(0xFF6993b2), const Color(0xFF2b4a64)],
+                              colors: [const Color(0xFF485763), const Color(0xFF485763), const Color(0xFFAFAFAF), const Color(0xFFAFAFAF), const Color(0xFF485763)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             )
@@ -265,25 +284,41 @@ class RankList extends StatelessWidget {
                                 ),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: const Color.fromARGB(255, 52, 152, 219), // 枠線の色を指定
+                    color: index < 3
+                          ? const Color.fromARGB(255, 30, 30, 30)
+                          : const Color.fromARGB(255, 52, 152, 219),
                     width: 2, // 枠線の太さを指定
                   ),
                 ),
                 child: ListTile(
                   leading: _buildLeadingIcon(index),
-                  title: Text(
-                    rankData[index]["username"],
-                    style: TextStyle(
-                      color: index < 3 // 1〜3位の場合は白、それ以外は青
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        rankData[index]["username"],
+                        style: TextStyle(
+                        color: index < 3 // 1〜3位の場合は白、それ以外は青
                           ? Colors.white
                           : const Color.fromARGB(255, 52, 152, 219),
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      // デバッグ用のタイムスタンプを表示するもの
+                      // SizedBox(height: 5),
+                      // Text(
+                      //   "Timestamp: ${rankData[index]["timestamp"].toString()}",
+                      //   style: TextStyle(
+                      //     color: const Color.fromARGB(255, 0, 0, 0),
+                      //     fontSize: 12,
+                      //   ),
+                      // ),
+                    ],
                   ),
                   trailing: Text(
                     "${rankData[index]["score"]}%",
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 20,
                       color: index < 3 // 1〜3位の場合は白、それ以外は青
                           ? Colors.white
                           : const Color.fromARGB(255, 52, 152, 219),

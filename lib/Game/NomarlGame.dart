@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore のインポ
 import 'package:flutter_application_1/screen/Rank.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/user_provider.dart';
-import 'package:flutter_application_1/screen/Rank.dart';
 
 class NormalGameScreen extends StatefulWidget {
   final bool startCountdown;
@@ -19,13 +18,14 @@ class NormalGameScreen extends StatefulWidget {
 class _NormalGameScreenState extends State<NormalGameScreen> {
   int countdown = 3;
   int gameTime = 30;
+  int enemytimer = 30;
   double progress = 1.0;
   Color backgroundColor = Colors.white;
   String selectedLight = '';
   List<PollutionImage> pollutionImages = [];
   Random random = Random();
   int score = 0;
-  int maxPollutionImages = 4;
+  int maxPollutionImages = 2;
   bool debugMode = true; // デバッグモードを有効にするフラグ
   double debugAreaTopOffset = 100; // 生成エリアの上部オフセット
   double debugAreaHeight = 300; // 生成エリアの高さ
@@ -79,7 +79,6 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
         final elapsed = DateTime.now().difference(startTime).inMilliseconds;
         final totalTime = gameTime * 1000; // ゲーム時間をミリ秒換算
         progress = 1.0 - (elapsed / totalTime);
-
         if (elapsed >= totalTime) {
           progress = 0.0;
           timer.cancel();
@@ -88,17 +87,19 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
       });
     });
 
-    Timer.periodic(Duration(seconds: 2), (timer) {
-      if (gameTime <= 0 || !mounted) {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      if (!mounted) {
         timer.cancel();
-      } else {
+        return;
+      }
+      if (enemytimer > 3) {
         setState(() {
-          // 残り時間が1秒を切った場合は生成しない
-          if (gameTime > 1) {
-            pollutionImages.addAll(generatePollutionImages());
-          }
+          pollutionImages.addAll(generatePollutionImages());
         });
       }
+      setState(() {
+        enemytimer--; // 残り時間を1秒ごとに減らす
+      });
     });
   }
 
@@ -147,7 +148,7 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => ResultScreen(
-              scorePercentage: (score / maxPollutionImages) * 6.67),
+              scorePercentage: (score / maxPollutionImages) * 3.571),
         ),
       );
     }
@@ -157,7 +158,7 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
     final firestore = FirebaseFirestore.instance;
     final username = Provider.of<UserProvider>(context, listen: false).username;
 
-    double scorePercentage = (score / maxPollutionImages) * 6.67;
+    double scorePercentage = (score / maxPollutionImages) * 3.571;
 
     try {
       await firestore.collection('normal').add({
@@ -185,13 +186,14 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text("ゲーム画面"),
+        title: Text("ゲーム画面", style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))),
+        backgroundColor: Color.fromARGB(255, 239, 245, 253),
         automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: [
           if (countdown > 0)
-            Center(child: Text('$countdown', style: TextStyle(fontSize: 50))),
+            Center(child: Text('$countdown', style: TextStyle(fontSize: 50, color: Color.fromARGB(255, 52, 152, 219)))),
           if (countdown == 0) ...[
             Positioned(
               top: 20,
@@ -199,7 +201,11 @@ class _NormalGameScreenState extends State<NormalGameScreen> {
               right: 20,
               child: Container(
                 height: 10, // 元の2倍の高さ
-                child: LinearProgressIndicator(value: progress),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 52, 152, 219)),
+                  backgroundColor: Color.fromARGB(255, 239, 245, 253),
+                  ),
               ),
             ),
             Stack(children: pollutionImages.cast<Widget>()),
@@ -383,7 +389,7 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("結果"),
+        title: Text("結果" , style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))),
         automaticallyImplyLeading: false,
       ),
       body: Center(
@@ -391,13 +397,17 @@ class ResultScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("除去率: ${scorePercentage.toStringAsFixed(1)}%",
-                style: TextStyle(fontSize: 30)),
+                style: TextStyle(fontSize: 30, color: Color.fromARGB(255, 52, 152, 219))),
             SizedBox(height: 20),
             TextButton(
               style: TextButton.styleFrom(
                 fixedSize: const Size(180, 55),
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                backgroundColor: const Color.fromARGB(255, 167, 209, 244),
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219), // テキストを青に
+                backgroundColor: Colors.white, // 背景を白に
+                side: BorderSide(color: Color.fromARGB(255, 52, 152, 219), width: 2), // 枠線を青に
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20), // 角を丸くする
+                ),
               ),
               onPressed: () {
                 Navigator.push(context,
@@ -409,11 +419,14 @@ class ResultScreen extends StatelessWidget {
               height: 10,
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(180, 55), // サイズをランキングボタンと同じに
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // テキスト色
-                backgroundColor:
-                    const Color.fromARGB(255, 195, 213, 237), // 背景色
+              style: TextButton.styleFrom(
+                fixedSize: const Size(180, 55),
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219), // テキストを青に
+                backgroundColor: Colors.white, // 背景を白に
+                side: BorderSide(color: Color.fromARGB(255, 52, 152, 219), width: 2), // 枠線を青に
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20), // 角を丸くする
+                ),
               ),
               onPressed: () {
                 Navigator.pushReplacement(
@@ -432,8 +445,12 @@ class ResultScreen extends StatelessWidget {
             TextButton(
               style: TextButton.styleFrom(
                 fixedSize: const Size(180, 55),
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                backgroundColor: const Color.fromARGB(255, 167, 209, 244),
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219), // テキストを青に
+                backgroundColor: Colors.white, // 背景を白に
+                side: BorderSide(color: Color.fromARGB(255, 52, 152, 219), width: 2), // 枠線を青に
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20), // 角を丸くする
+                ),
               ),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);

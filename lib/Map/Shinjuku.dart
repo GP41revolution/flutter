@@ -37,8 +37,17 @@ class _ShinjukuPageState extends State<ShinjukuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('新宿エリア',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219)),),
+        title: Text('新宿エリア',style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))),
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: Color.fromARGB(255, 52, 152, 219),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
       ),
       body: Center(
         child: Column(
@@ -61,7 +70,7 @@ class _ShinjukuPageState extends State<ShinjukuPage> {
             SizedBox(height: 20),
             Text(
               '$selectedDifficulty 選択中',
-              style: TextStyle(fontSize: 16, color: Colors.black),
+              style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 52, 152, 219)),
             ),
             SizedBox(height: 20),
             Row(
@@ -72,24 +81,28 @@ class _ShinjukuPageState extends State<ShinjukuPage> {
                   width: 150,
                   height: 150,
                 ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/hard_enemy_red.png',
+                  width: 50,
+                  height: 50,
+                ),
                 SizedBox(width: 20),
-                Column(
-                  children: [
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedDifficulty = 'ハード';
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedDifficulty == 'ハード'
-                            ? Colors.blue
-                            : Colors.grey,
-                      ),
-                      child: Text(' ハード '),
-                    ),
-                  ],
+                Image.asset(
+                  'assets/hard_enemy_blue.png',
+                  width: 50,
+                  height: 50,
+                ),
+                SizedBox(width: 20),
+                Image.asset(
+                  'assets/hard_enemy_green.png',
+                  width: 50,
+                  height: 50,
                 ),
               ],
             ),
@@ -104,6 +117,14 @@ class _ShinjukuPageState extends State<ShinjukuPage> {
                   ),
                 );
               },
+              style: TextButton.styleFrom(
+                foregroundColor: const Color.fromARGB(255, 52, 152, 219), // テキストを青に
+                backgroundColor: Colors.white, // 背景を白に
+                side: BorderSide(color: Color.fromARGB(255, 52, 152, 219), width: 2), // 枠線を青に
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20), // 角を丸くする
+                ),
+              ),
               child: Text('スタート'),
             ),
           ],
