@@ -115,8 +115,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   // ユーザーネームに禁止ワードが含まれているかをチェック
   bool _containsBannedWords(String input) {
     for (final word in bannedWords) {
-      // 禁止ワードに含まれる単語を検出する
-      if (input.toLowerCase().contains(word.toLowerCase())) {
+      // 完全一致する禁止ワードを検出する
+      if (input.toLowerCase() == word.toLowerCase()) {
         return true;
       }
     }
