@@ -103,8 +103,8 @@ class MapPageScreens extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    left: -4,
-                    top: 103,
+                    left: -3,
+                    top: 104,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -114,8 +114,8 @@ class MapPageScreens extends StatelessWidget {
                       },
                       child: Image.asset(
                         'assets/Map(3).png', //落合
-                        width: 175,
-                        height: 175,
+                        width: 174,
+                        height: 174,
                       ),
                     ),
                   ),
