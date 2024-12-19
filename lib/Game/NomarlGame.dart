@@ -390,6 +390,7 @@ class ResultScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("結果" , style: TextStyle(color: Color.fromARGB(255, 52, 152, 219))),
+        backgroundColor: Color.fromARGB(255, 239, 245, 253),
         automaticallyImplyLeading: false,
       ),
       body: Center(
@@ -460,6 +461,7 @@ class ResultScreen extends StatelessWidget {
           ],
         ),
       ),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
     );
   }
 }
