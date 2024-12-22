@@ -114,15 +114,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   // ユーザーネームに禁止ワードが含まれているかをチェック
   bool _containsBannedWords(String input) {
+    // 入力を小文字に変換して比較
+    final lowerInput = input.toLowerCase();
+
+    // 禁止ワードが3文字以上、または明確な単語として扱われる場合にのみ検出
     for (final word in bannedWords) {
-      // 完全一致する禁止ワードを検出する
-      if (input.toLowerCase() == word.toLowerCase()) {
-        return true;
+      if (word.length > 1) {
+        // 禁止ワードが文字列内に存在する場合をチェック
+        if (lowerInput.contains(word)) {
+          return true; // 禁止ワードが含まれる場合
+        }
       }
     }
-    return false;
+    return false; // 禁止ワードが見つからない場合
   }
-
 
   @override
   Widget build(BuildContext context) {
