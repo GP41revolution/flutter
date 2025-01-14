@@ -70,7 +70,7 @@ class MapPageScreens extends StatelessWidget {
                   ),
                   Positioned(
                     left: 79,
-                    top: 225,
+                    top: 235,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -86,8 +86,8 @@ class MapPageScreens extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    left: 239,
-                    top: 122,
+                    left: 235,
+                    top: 132,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -104,7 +104,7 @@ class MapPageScreens extends StatelessWidget {
                   ),
                   Positioned(
                     left: -2.8,
-                    top: 105,
+                    top: 115,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -121,7 +121,7 @@ class MapPageScreens extends StatelessWidget {
                   ),
                   Positioned(
                     left: 117,
-                    top: 135,
+                    top: 145,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -138,7 +138,7 @@ class MapPageScreens extends StatelessWidget {
                   ),
                   Positioned(
                     left: 205,
-                    top: 236,
+                    top: 244,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -148,7 +148,7 @@ class MapPageScreens extends StatelessWidget {
                       },
                       child: Image.asset(
                         'assets/Map(5).png', //四谷
-                        width: 174,
+                        width: 169,
                         height: 173,
                       ),
                     ),
